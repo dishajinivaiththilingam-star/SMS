@@ -7,24 +7,14 @@ import Navbar from "../components/Navbar";
 
 function Attendance() {
 
-  // =========================
-  // STATES
-  // =========================
+  const [courses, setCourses] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [attendanceList, setAttendanceList] = useState([]);
 
-  const [courses, setCourses] =
-    useState([]);
-
-  const [students, setStudents] =
-    useState([]);
-
-  const [attendanceList, setAttendanceList] =
-    useState([]);
-
-  const [course_id, setCourseId] =
-    useState("");
-
-  const [filterDate, setFilterDate] =
-    useState("");
+  const [course_id, setCourseId] = useState("");
+  const [filterDate, setFilterDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
 
 
 
@@ -45,15 +35,6 @@ function Attendance() {
     } catch (error) {
 
       console.log(error);
-
-
-
-      Swal.fire({
-        title: "Error!",
-        text: "Failed to load courses",
-        icon: "error",
-        confirmButtonColor: "#dc2626"
-      });
 
     }
 
@@ -79,15 +60,6 @@ function Attendance() {
 
       console.log(error);
 
-
-
-      Swal.fire({
-        title: "Error!",
-        text: "Failed to load students",
-        icon: "error",
-        confirmButtonColor: "#dc2626"
-      });
-
     }
 
   };
@@ -112,15 +84,6 @@ function Attendance() {
 
       console.log(error);
 
-
-
-      Swal.fire({
-        title: "Error!",
-        text: "Failed to load attendance",
-        icon: "error",
-        confirmButtonColor: "#dc2626"
-      });
-
     }
 
   };
@@ -136,21 +99,20 @@ function Attendance() {
     status
   ) => {
 
-    const updatedStudents =
-      students.map((student) => {
+    const updatedStudents = students.map((student) => {
 
-        if (student.id === studentId) {
+      if (student.id === studentId) {
 
-          return {
-            ...student,
-            status
-          };
+        return {
+          ...student,
+          status
+        };
 
-        }
+      }
 
-        return student;
+      return student;
 
-      });
+    });
 
     setStudents(updatedStudents);
 
@@ -166,24 +128,32 @@ function Attendance() {
 
     try {
 
+      if (!course_id) {
+
+        return Swal.fire({
+          title: "Warning!",
+          text: "Please Select Course",
+          icon: "warning"
+        });
+
+      }
+
       const attendanceData =
         students
           .filter(
             (student) =>
-              student.course_id ==
-              course_id
+              student.course_id == course_id
           )
           .map((student) => ({
+
             student_id: student.id,
-            course_id:
-              Number(course_id),
-            attendance_date:
-              new Date()
-                .toISOString()
-                .split("T")[0],
-            status:
-              student.status ||
-              "Absent"
+
+            course_id: Number(course_id),
+
+            attendance_date: filterDate,
+
+            status: student.status || "Absent"
+
           }));
 
 
@@ -226,11 +196,34 @@ function Attendance() {
 
 
   // =========================
+  // FILTERED ATTENDANCE
+  // =========================
+
+  const filteredAttendance =
+    attendanceList.filter((item) => {
+
+      const courseMatch =
+        course_id
+          ? item.course_id == course_id
+          : true;
+
+      const dateMatch =
+        filterDate
+          ? item.attendance_date == filterDate
+          : true;
+
+      return courseMatch && dateMatch;
+
+    });
+
+
+
+  // =========================
   // PRESENT COUNT
   // =========================
 
   const presentCount =
-    attendanceList.filter(
+    filteredAttendance.filter(
       (item) =>
         item.status === "Present"
     ).length;
@@ -242,7 +235,7 @@ function Attendance() {
   // =========================
 
   const absentCount =
-    attendanceList.filter(
+    filteredAttendance.filter(
       (item) =>
         item.status === "Absent"
     ).length;
@@ -288,11 +281,9 @@ function Attendance() {
 
 
 
-          {/* FILTERS */}
+          {/* FILTER */}
 
           <div className="bg-white p-6 rounded-xl shadow mb-10 flex gap-5">
-
-            {/* COURSE */}
 
             <select
               className="border bg-white text-black p-3 rounded"
@@ -321,8 +312,6 @@ function Attendance() {
 
 
 
-            {/* DATE */}
-
             <input
               type="date"
               className="border bg-white text-black p-3 rounded"
@@ -343,15 +332,11 @@ function Attendance() {
             <div className="bg-green-500 text-white p-6 rounded-xl shadow">
 
               <h2 className="text-2xl font-bold">
-
                 Present
-
               </h2>
 
               <p className="text-4xl mt-3">
-
                 {presentCount}
-
               </p>
 
             </div>
@@ -361,15 +346,11 @@ function Attendance() {
             <div className="bg-red-500 text-white p-6 rounded-xl shadow">
 
               <h2 className="text-2xl font-bold">
-
                 Absent
-
               </h2>
 
               <p className="text-4xl mt-3">
-
                 {absentCount}
-
               </p>
 
             </div>
@@ -378,7 +359,7 @@ function Attendance() {
 
 
 
-          {/* STUDENTS TABLE */}
+          {/* STUDENT TABLE */}
 
           <div className="bg-white p-6 rounded-xl shadow mb-10 overflow-auto">
 
@@ -397,7 +378,7 @@ function Attendance() {
                   </th>
 
                   <th className="p-3 text-left text-black">
-                    Attendance
+                    Status
                   </th>
 
                 </tr>
@@ -411,8 +392,7 @@ function Attendance() {
                 {students
                   .filter(
                     (student) =>
-                      student.course_id ==
-                      course_id
+                      student.course_id == course_id
                   )
                   .map((student) => (
 
@@ -433,11 +413,14 @@ function Attendance() {
 
                         <div className="flex gap-5">
 
-                          <label className="text-black">
+                          <label className="text-green-600 font-semibold">
 
                             <input
                               type="radio"
                               name={`attendance-${student.id}`}
+                              checked={
+                                student.status === "Present"
+                              }
                               onChange={() =>
                                 handleStatusChange(
                                   student.id,
@@ -454,11 +437,14 @@ function Attendance() {
 
 
 
-                          <label className="text-black">
+                          <label className="text-red-600 font-semibold">
 
                             <input
                               type="radio"
                               name={`attendance-${student.id}`}
+                              checked={
+                                student.status === "Absent"
+                              }
                               onChange={() =>
                                 handleStatusChange(
                                   student.id,
@@ -498,7 +484,7 @@ function Attendance() {
 
 
 
-          {/* ATTENDANCE HISTORY */}
+          {/* HISTORY */}
 
           <div className="bg-white p-6 rounded-xl shadow overflow-auto">
 
@@ -517,11 +503,11 @@ function Attendance() {
                 <tr className="border-b bg-gray-100">
 
                   <th className="p-3 text-left text-black">
-                    Student ID
+                    Student Name
                   </th>
 
                   <th className="p-3 text-left text-black">
-                    Course ID
+                    Course
                   </th>
 
                   <th className="p-3 text-left text-black">
@@ -540,28 +526,23 @@ function Attendance() {
 
               <tbody>
 
-                {attendanceList
-                  .filter((item) => {
+                {filteredAttendance.map((item) => {
 
-                    const courseMatch =
-                      course_id
-                        ? item.course_id ==
-                          course_id
-                        : true;
-
-                    const dateMatch =
-                      filterDate
-                        ? item.attendance_date ==
-                          filterDate
-                        : true;
-
-                    return (
-                      courseMatch &&
-                      dateMatch
+                  const student =
+                    students.find(
+                      (s) =>
+                        s.id == item.student_id
                     );
 
-                  })
-                  .map((item) => (
+                  const course =
+                    courses.find(
+                      (c) =>
+                        c.id == item.course_id
+                    );
+
+
+
+                  return (
 
                     <tr
                       key={item.id}
@@ -569,11 +550,11 @@ function Attendance() {
                     >
 
                       <td className="p-3 text-black">
-                        {item.student_id}
+                        {student?.student_name}
                       </td>
 
                       <td className="p-3 text-black">
-                        {item.course_id}
+                        {course?.course_name}
                       </td>
 
                       <td className="p-3 text-black">
@@ -584,8 +565,7 @@ function Attendance() {
 
                         <span
                           className={`px-3 py-1 rounded text-white ${
-                            item.status ===
-                            "Present"
+                            item.status === "Present"
                               ? "bg-green-500"
                               : "bg-red-500"
                           }`}
@@ -597,7 +577,9 @@ function Attendance() {
 
                     </tr>
 
-                  ))}
+                  );
+
+                })}
 
               </tbody>
 

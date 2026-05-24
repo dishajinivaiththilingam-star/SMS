@@ -30,36 +30,40 @@ function TeacherProfile() {
   const getTeacher =
     async () => {
 
-    try {
+      try {
 
-      const res =
-        await axios.get(
-          "http://localhost:5000/api/teachers"
+        const res =
+          await axios.get(
+            "http://localhost:5000/api/teachers"
+          );
+
+
+
+        const singleTeacher =
+          res.data.find(
+            (item) =>
+              item.id == id
+          );
+
+
+
+        setTeacher(
+          singleTeacher
         );
 
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    };
 
 
-      const singleTeacher =
-        res.data.find(
-          (item) =>
-            item.id == id
-        );
 
-
-
-      setTeacher(
-        singleTeacher
-      );
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
-  };
-
-
+  // =========================
+  // LOAD DATA
+  // =========================
 
   useEffect(() => {
 
@@ -70,12 +74,36 @@ function TeacherProfile() {
 
 
 
+  // =========================
+  // LOADING
+  // =========================
+
   if (!teacher) {
 
     return (
-      <div className="p-10">
-        Loading...
+
+      <div className="flex">
+
+        <Sidebar />
+
+        <div className="ml-[250px] w-full min-h-screen bg-gray-100">
+
+          <Navbar />
+
+          <div className="p-10">
+
+            <div className="bg-white rounded-2xl shadow p-10 text-center text-2xl font-semibold">
+
+              Loading...
+
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
+
     );
 
   }
@@ -94,11 +122,15 @@ function TeacherProfile() {
 
         <div className="p-10">
 
+          {/* PROFILE CARD */}
+
           <div className="bg-white rounded-2xl shadow p-10">
 
-            {/* IMAGE */}
+            {/* TOP SECTION */}
 
-            <div className="flex items-center gap-8">
+            <div className="flex flex-col md:flex-row items-center gap-10 border-b pb-10">
+
+              {/* IMAGE */}
 
               <img
                 src={
@@ -109,14 +141,16 @@ function TeacherProfile() {
 
                 alt="Teacher"
 
-                className="w-40 h-40 rounded-full object-cover border-4 border-blue-500"
+                className="w-44 h-44 rounded-full object-cover border-4 border-blue-500 shadow-lg"
               />
 
 
 
-              <div>
+              {/* DETAILS */}
 
-                <h1 className="text-4xl font-bold mb-3">
+              <div className="flex-1">
+
+                <h1 className="text-4xl font-bold text-gray-800 mb-4">
 
                   {teacher.teacher_name}
 
@@ -124,19 +158,193 @@ function TeacherProfile() {
 
 
 
-                <p className="text-gray-600 text-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-                  {teacher.email}
+                  {/* EMAIL */}
 
-                </p>
+                  <div>
+
+                    <p className="text-gray-500 font-semibold">
+
+                      Email
+
+                    </p>
+
+                    <p className="text-lg text-gray-800">
+
+                      {teacher.email || "-"}
+
+                    </p>
+
+                  </div>
 
 
 
-                <p className="text-gray-600 text-lg">
+                  {/* PHONE */}
 
-                  {teacher.phone}
+                  <div>
 
-                </p>
+                    <p className="text-gray-500 font-semibold">
+
+                      Phone Number
+
+                    </p>
+
+                    <p className="text-lg text-gray-800">
+
+                      {teacher.phone || "-"}
+
+                    </p>
+
+                  </div>
+
+
+
+                  {/* GENDER */}
+
+                  <div>
+
+                    <p className="text-gray-500 font-semibold">
+
+                      Gender
+
+                    </p>
+
+                    <p className="text-lg text-gray-800">
+
+                      {teacher.gender || "-"}
+
+                    </p>
+
+                  </div>
+
+
+
+                  {/* JOINING DATE */}
+
+                  <div>
+
+                    <p className="text-gray-500 font-semibold">
+
+                      Joining Date
+
+                    </p>
+
+                    <p className="text-lg text-gray-800">
+
+                      {teacher.joining_date || "-"}
+
+                    </p>
+
+                  </div>
+
+
+
+                  {/* SALARY */}
+
+                  <div>
+
+                    <p className="text-gray-500 font-semibold">
+
+                      Salary
+
+                    </p>
+
+                    <p className="text-lg text-gray-800">
+
+                      Rs. {teacher.salary || "-"}
+
+                    </p>
+
+                  </div>
+
+
+
+                  {/* STATUS */}
+
+                  <div>
+
+                    <p className="text-gray-500 font-semibold mb-2">
+
+                      Status
+
+                    </p>
+
+                    <span
+                      className={`px-4 py-2 rounded-full text-white font-semibold ${
+                        teacher.status === "Active"
+                          ? "bg-green-500"
+                          : "bg-red-500"
+                      }`}
+                    >
+
+                      {teacher.status || "Inactive"}
+
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+
+            {/* QUALIFICATION */}
+
+            <div className="mt-10">
+
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+
+                Qualification
+
+              </h2>
+
+              <div className="bg-gray-100 rounded-xl p-5 text-gray-700 leading-8">
+
+                {teacher.qualification || "No Qualification Added"}
+
+              </div>
+
+            </div>
+
+
+
+            {/* EXPERIENCE */}
+
+            <div className="mt-10">
+
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+
+                Experience
+
+              </h2>
+
+              <div className="bg-gray-100 rounded-xl p-5 text-gray-700 leading-8">
+
+                {teacher.experience || "No Experience Added"}
+
+              </div>
+
+            </div>
+
+
+
+            {/* ADDRESS */}
+
+            <div className="mt-10">
+
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+
+                Address
+
+              </h2>
+
+              <div className="bg-gray-100 rounded-xl p-5 text-gray-700 leading-8">
+
+                {teacher.address || "No Address Added"}
 
               </div>
 
@@ -148,7 +356,7 @@ function TeacherProfile() {
 
             <div className="mt-10">
 
-              <h2 className="text-2xl font-bold mb-5">
+              <h2 className="text-2xl font-bold text-gray-800 mb-5">
 
                 Assigned Courses
 
@@ -164,7 +372,7 @@ function TeacherProfile() {
 
                     <span
                       key={index}
-                      className="bg-blue-600 text-white px-5 py-2 rounded-full"
+                      className="bg-blue-600 text-white px-5 py-2 rounded-full font-medium"
                     >
 
                       {course}

@@ -2,207 +2,61 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import Swal from "sweetalert2";
 
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 
 function AttendanceReport() {
 
-  const [attendance, setAttendance] =
-    useState([]);
+  const [attendance, setAttendance] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [courses, setCourses] = useState([]);
 
-  const [students, setStudents] =
-    useState([]);
+  const [search, setSearch] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState("");
 
-  const [courses, setCourses] =
-    useState([]);
-
-  const [search, setSearch] =
-    useState("");
-
-  const [selectedCourse, setSelectedCourse] =
-    useState("");
+  const [selectedDate, setSelectedDate] = useState("");
 
 
 
-  // =========================
-  // GET ATTENDANCE
-  // =========================
+  const getAttendance = async () => {
 
-  const getAttendance =
-    async () => {
-
-    try {
-
-      const res =
-        await axios.get(
-          "http://localhost:5000/api/attendance"
-        );
-
-      setAttendance(res.data);
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
-  };
-
-
-
-  // =========================
-  // GET STUDENTS
-  // =========================
-
-  const getStudents =
-    async () => {
-
-    try {
-
-      const res =
-        await axios.get(
-          "http://localhost:5000/api/students"
-        );
-
-      setStudents(res.data);
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
-  };
-
-
-
-  // =========================
-  // GET COURSES
-  // =========================
-
-  const getCourses =
-    async () => {
-
-    try {
-
-      const res =
-        await axios.get(
-          "http://localhost:5000/api/courses"
-        );
-
-      setCourses(res.data);
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
-  };
-
-
-
-  // =========================
-  // PDF DOWNLOAD
-  // =========================
-
-  const downloadPDF = () => {
-
-    const doc =
-      new jsPDF();
-
-
-
-    doc.setFontSize(20);
-
-    doc.text(
-      "Attendance Report",
-      14,
-      20
+    const res = await axios.get(
+      "http://localhost:5000/api/attendance"
     );
 
+    setAttendance(res.data);
 
-
-    const tableColumn = [
-
-      "Student ID",
-      "Student Name",
-      "Course",
-      "Date",
-      "Status"
-
-    ];
+  };
 
 
 
-    const tableRows = [];
+  const getStudents = async () => {
 
-
-
-    filteredAttendance.forEach(
-      (item) => {
-
-        const student =
-          students.find(
-            (s) =>
-              s.id ==
-              item.student_id
-          );
-
-
-
-        const course =
-          courses.find(
-            (c) =>
-              c.id ==
-              item.course_id
-          );
-
-
-
-        tableRows.push([
-
-          student?.student_id,
-
-          student?.student_name,
-
-          course?.course_name,
-
-          item.date,
-
-          item.status
-
-        ]);
-
-      }
+    const res = await axios.get(
+      "http://localhost:5000/api/students"
     );
 
+    setStudents(res.data);
 
-
-    autoTable(doc, {
-
-      head: [tableColumn],
-
-      body: tableRows,
-
-      startY: 30
-
-    });
+  };
 
 
 
-    doc.save(
-      "Attendance_Report.pdf"
+  const getCourses = async () => {
+
+    const res = await axios.get(
+      "http://localhost:5000/api/courses"
     );
+
+    setCourses(res.data);
 
   };
 
 
 
   // =========================
-  // FILTER DATA
+  // FILTER
   // =========================
 
   const filteredAttendance =
@@ -211,53 +65,120 @@ function AttendanceReport() {
       const student =
         students.find(
           (s) =>
-            s.id ==
-            item.student_id
+            s.id == item.student_id
         );
-
-
 
       const studentName =
         student?.student_name
           ?.toLowerCase() || "";
-
-
 
       const searchMatch =
         studentName.includes(
           search.toLowerCase()
         );
 
-
-
       const courseMatch =
         selectedCourse
-          ? item.course_id ==
-            selectedCourse
+          ? item.course_id == selectedCourse
           : true;
 
-
+      const dateMatch =
+        selectedDate
+          ? item.attendance_date == selectedDate
+          : true;
 
       return (
         searchMatch &&
-        courseMatch
+        courseMatch &&
+        dateMatch
       );
 
     });
 
 
 
+  // =========================
+  // PDF
+  // =========================
 
-  // =========================
-  // LOAD DATA
-  // =========================
+  const downloadPDF = () => {
+
+    const doc = new jsPDF();
+
+    doc.text(
+      "Attendance Report",
+      14,
+      15
+    );
+
+
+
+    const tableRows = [];
+
+
+
+    filteredAttendance.forEach((item) => {
+
+      const student =
+        students.find(
+          (s) =>
+            s.id == item.student_id
+        );
+
+      const course =
+        courses.find(
+          (c) =>
+            c.id == item.course_id
+        );
+
+
+
+      tableRows.push([
+
+        student?.student_id,
+
+        student?.student_name,
+
+        course?.course_name,
+
+        item.attendance_date,
+
+        item.status
+
+      ]);
+
+    });
+
+
+
+    autoTable(doc, {
+
+      head: [[
+        "Student ID",
+        "Student Name",
+        "Course",
+        "Date",
+        "Status"
+      ]],
+
+      body: tableRows,
+
+      startY: 25
+
+    });
+
+
+
+    doc.save("Attendance_Report.pdf");
+
+  };
+
+
 
   useEffect(() => {
 
     getAttendance();
-
     getStudents();
-
     getCourses();
 
   }, []);
@@ -280,8 +201,6 @@ function AttendanceReport() {
 
 
         <div className="p-10">
-
-          {/* HEADER */}
 
           <div className="flex justify-between items-center mb-10">
 
@@ -306,9 +225,7 @@ function AttendanceReport() {
 
           {/* FILTER */}
 
-          <div className="bg-white p-5 rounded-xl shadow mb-10 flex gap-5">
-
-            {/* SEARCH */}
+          <div className="bg-white p-5 rounded-xl shadow mb-10 flex gap-5 flex-wrap">
 
             <input
               type="text"
@@ -316,23 +233,17 @@ function AttendanceReport() {
               className="border p-3 rounded w-[300px]"
               value={search}
               onChange={(e) =>
-                setSearch(
-                  e.target.value
-                )
+                setSearch(e.target.value)
               }
             />
 
 
 
-            {/* COURSE */}
-
             <select
               className="border p-3 rounded"
               value={selectedCourse}
               onChange={(e) =>
-                setSelectedCourse(
-                  e.target.value
-                )
+                setSelectedCourse(e.target.value)
               }
             >
 
@@ -352,6 +263,17 @@ function AttendanceReport() {
               ))}
 
             </select>
+
+
+
+            <input
+              type="date"
+              className="border p-3 rounded"
+              value={selectedDate}
+              onChange={(e) =>
+                setSelectedDate(e.target.value)
+              }
+            />
 
           </div>
 
@@ -395,93 +317,64 @@ function AttendanceReport() {
 
               <tbody>
 
-                {filteredAttendance.map(
-                  (item) => {
+                {filteredAttendance.map((item) => {
 
-                    const student =
-                      students.find(
-                        (s) =>
-                          s.id ==
-                          item.student_id
-                      );
-
-
-
-                    const course =
-                      courses.find(
-                        (c) =>
-                          c.id ==
-                          item.course_id
-                      );
-
-
-
-                    return (
-
-                      <tr
-                        key={item.id}
-                        className="border-b"
-                      >
-
-                        <td className="p-3">
-
-                          {
-                            student?.student_id
-                          }
-
-                        </td>
-
-
-
-                        <td className="p-3">
-
-                          {
-                            student?.student_name
-                          }
-
-                        </td>
-
-
-
-                        <td className="p-3">
-
-                          {
-                            course?.course_name
-                          }
-
-                        </td>
-
-
-
-                        <td className="p-3">
-
-                          {item.date}
-
-                        </td>
-
-
-
-                        <td className="p-3">
-
-                          <span
-                            className={`px-3 py-1 rounded text-white ${
-                              item.status ===
-                              "Present"
-                                ? "bg-green-500"
-                                : "bg-red-500"
-                            }`}
-                          >
-                            {item.status}
-                          </span>
-
-                        </td>
-
-                      </tr>
-
+                  const student =
+                    students.find(
+                      (s) =>
+                        s.id == item.student_id
                     );
 
-                  }
-                )}
+                  const course =
+                    courses.find(
+                      (c) =>
+                        c.id == item.course_id
+                    );
+
+
+
+                  return (
+
+                    <tr
+                      key={item.id}
+                      className="border-b"
+                    >
+
+                      <td className="p-3">
+                        {student?.student_id}
+                      </td>
+
+                      <td className="p-3">
+                        {student?.student_name}
+                      </td>
+
+                      <td className="p-3">
+                        {course?.course_name}
+                      </td>
+
+                      <td className="p-3">
+                        {item.attendance_date}
+                      </td>
+
+                      <td className="p-3">
+
+                        <span
+                          className={`px-3 py-1 rounded text-white ${
+                            item.status === "Present"
+                              ? "bg-green-500"
+                              : "bg-red-500"
+                          }`}
+                        >
+                          {item.status}
+                        </span>
+
+                      </td>
+
+                    </tr>
+
+                  );
+
+                })}
 
               </tbody>
 

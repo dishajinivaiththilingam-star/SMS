@@ -11,8 +11,10 @@ const {
 router.post("/", markAttendance);
 
 
+
 // GET ATTENDANCE
 router.get("/", getAttendance);
+
 
 
 module.exports = router;

@@ -18,8 +18,8 @@ function Teachers() {
   const [teachers, setTeachers] =
     useState([]);
 
-    const navigate =
-  useNavigate();
+  const navigate =
+    useNavigate();
 
   const [courses, setCourses] =
     useState([]);
@@ -33,13 +33,29 @@ function Teachers() {
   const [phone, setPhone] =
     useState("");
 
-  const [subject, setSubject] =
+  const [qualification, setQualification] =
     useState("");
 
-    const [profileImage, setProfileImage] =
-  useState(null);
+  const [experience, setExperience] =
+    useState("");
 
-  // MULTIPLE COURSES
+  const [salary, setSalary] =
+    useState("");
+
+  const [joining_date, setJoiningDate] =
+    useState("");
+
+  const [gender, setGender] =
+    useState("");
+
+  const [address, setAddress] =
+    useState("");
+
+  const [status, setStatus] =
+    useState("Active");
+
+  const [profileImage, setProfileImage] =
+    useState(null);
 
   const [
     selectedCourses,
@@ -109,7 +125,7 @@ function Teachers() {
 
 
   // =========================
-  // LOAD
+  // LOAD DATA
   // =========================
 
   useEffect(() => {
@@ -136,48 +152,62 @@ function Teachers() {
 
     setPhone("");
 
-    setSubject("");
+    setQualification("");
+
+    setExperience("");
+
+    setSalary("");
+
+    setJoiningDate("");
+
+    setGender("");
+
+    setAddress("");
+
+    setStatus("Active");
 
     setSelectedCourses([]);
+
+    setProfileImage(null);
 
   };
 
 
 
   // =========================
-  // HANDLE COURSE SELECT
+  // HANDLE COURSE
   // =========================
 
   const handleCourseChange =
     (courseName) => {
 
-    if (
-      selectedCourses.includes(
-        courseName
-      )
-    ) {
-
-      setSelectedCourses(
-
-        selectedCourses.filter(
-          (item) =>
-            item !== courseName
+      if (
+        selectedCourses.includes(
+          courseName
         )
+      ) {
 
-      );
+        setSelectedCourses(
 
-    }
+          selectedCourses.filter(
+            (item) =>
+              item !== courseName
+          )
 
-    else {
+        );
 
-      setSelectedCourses([
-        ...selectedCourses,
-        courseName
-      ]);
+      }
 
-    }
+      else {
 
-  };
+        setSelectedCourses([
+          ...selectedCourses,
+          courseName
+        ]);
+
+      }
+
+    };
 
 
 
@@ -188,127 +218,160 @@ function Teachers() {
   const handleSubmit =
     async (e) => {
 
-    e.preventDefault();
+      e.preventDefault();
 
-    try {
+      try {
 
-      const formData =
-  new FormData();
+        const formData =
+          new FormData();
 
-formData.append(
-  "teacher_name",
-  teacher_name
-);
-
-formData.append(
-  "email",
-  email
-);
-
-formData.append(
-  "phone",
-  phone
-);
-
-formData.append(
-  "subject",
-  subject
-);
-
-formData.append(
-  "courses",
-  JSON.stringify(
-    selectedCourses
-  )
-);
-
-if (profileImage) {
-
-  formData.append(
-    "profile_image",
-    profileImage
-  );
-
-}
-
-
-      // UPDATE
-
-      if (editId) {
-
-        await axios.put(
-          `http://localhost:5000/api/teachers/${editId}`,
-          formData
+        formData.append(
+          "teacher_name",
+          teacher_name
         );
+
+        formData.append(
+          "email",
+          email
+        );
+
+        formData.append(
+          "phone",
+          phone
+        );
+
+        formData.append(
+          "qualification",
+          qualification
+        );
+
+        formData.append(
+          "experience",
+          experience
+        );
+
+        formData.append(
+          "salary",
+          salary
+        );
+
+        formData.append(
+          "joining_date",
+          joining_date
+        );
+
+        formData.append(
+          "gender",
+          gender
+        );
+
+        formData.append(
+          "address",
+          address
+        );
+
+        formData.append(
+          "status",
+          status
+        );
+
+        formData.append(
+          "courses",
+          JSON.stringify(
+            selectedCourses
+          )
+        );
+
+
+
+        if (profileImage) {
+
+          formData.append(
+            "profile_image",
+            profileImage
+          );
+
+        }
+
+
+
+        // UPDATE
+
+        if (editId) {
+
+          await axios.put(
+            `http://localhost:5000/api/teachers/${editId}`,
+            formData
+          );
+
+          Swal.fire({
+
+            icon: "success",
+
+            title: "Updated",
+
+            text:
+              "Teacher Updated Successfully",
+
+            timer: 2000,
+
+            showConfirmButton: false
+
+          });
+
+        }
+
+        // ADD
+
+        else {
+
+          await axios.post(
+            "http://localhost:5000/api/teachers",
+            formData
+          );
+
+          Swal.fire({
+
+            icon: "success",
+
+            title: "Added",
+
+            text:
+              "Teacher Added Successfully",
+
+            timer: 2000,
+
+            showConfirmButton: false
+
+          });
+
+        }
+
+
+
+        getTeachers();
+
+        resetForm();
+
+      } catch (error) {
+
+        console.log(error);
 
         Swal.fire({
 
-          icon: "success",
+          icon: "error",
 
-          title: "Updated",
+          title: "Error",
 
           text:
-            "Teacher Updated Successfully",
-
-          timer: 2000,
-
-          showConfirmButton: false
+            error.response?.data?.message ||
+            "Something went wrong"
 
         });
 
       }
 
-      // ADD
-
-      else {
-
-        await axios.post(
-          "http://localhost:5000/api/teachers",
-          formData
-        );
-
-        Swal.fire({
-
-          icon: "success",
-
-          title: "Added",
-
-          text:
-            "Teacher Added Successfully",
-
-          timer: 2000,
-
-          showConfirmButton: false
-
-        });
-
-      }
-
-
-
-      getTeachers();
-
-      resetForm();
-
-    } catch (error) {
-
-      console.log(error);
-
-      Swal.fire({
-
-        icon: "error",
-
-        title: "Error",
-
-        text:
-          error.response?.data?.message ||
-          "Something went wrong"
-
-      });
-
-    }
-
-  };
+    };
 
 
 
@@ -319,47 +382,67 @@ if (profileImage) {
   const editTeacher =
     (teacher) => {
 
-    setEditId(teacher.id);
+      setEditId(teacher.id);
 
-    setTeacherName(
-      teacher.teacher_name || ""
-    );
+      setTeacherName(
+        teacher.teacher_name || ""
+      );
 
-    setEmail(
-      teacher.email || ""
-    );
+      setEmail(
+        teacher.email || ""
+      );
 
-    setPhone(
-      teacher.phone || ""
-    );
+      setPhone(
+        teacher.phone || ""
+      );
 
-    setSubject(
-      teacher.subject || ""
-    );
+      setQualification(
+        teacher.qualification || ""
+      );
+
+      setExperience(
+        teacher.experience || ""
+      );
+
+      setSalary(
+        teacher.salary || ""
+      );
+
+      setJoiningDate(
+        teacher.joining_date || ""
+      );
+
+      setGender(
+        teacher.gender || ""
+      );
+
+      setAddress(
+        teacher.address || ""
+      );
+
+      setStatus(
+        teacher.status || "Active"
+      );
+
+      setSelectedCourses(
+
+        teacher.courses
+          ? teacher.courses.split(",")
+          : []
+
+      );
 
 
 
-    // MULTIPLE COURSES
+      window.scrollTo({
 
-    setSelectedCourses(
+        top: 0,
 
-      teacher.courses
-        ? teacher.courses.split(",")
-        : []
+        behavior: "smooth"
 
-    );
+      });
 
-
-
-    window.scrollTo({
-
-      top: 0,
-
-      behavior: "smooth"
-
-    });
-
-  };
+    };
 
 
 
@@ -370,60 +453,60 @@ if (profileImage) {
   const deleteTeacher =
     async (id) => {
 
-    const result =
-      await Swal.fire({
+      const result =
+        await Swal.fire({
 
-        title: "Are you sure?",
+          title: "Are you sure?",
 
-        text:
-          "You won't be able to revert this!",
+          text:
+            "You won't be able to revert this!",
 
-        icon: "warning",
+          icon: "warning",
 
-        showCancelButton: true,
+          showCancelButton: true,
 
-        confirmButtonColor: "#d33",
+          confirmButtonColor: "#d33",
 
-        cancelButtonColor: "#3085d6",
+          cancelButtonColor: "#3085d6",
 
-        confirmButtonText:
-          "Yes, Delete"
+          confirmButtonText:
+            "Yes, Delete"
 
-      });
+        });
 
-    if (!result.isConfirmed)
-      return;
+      if (!result.isConfirmed)
+        return;
 
-    try {
+      try {
 
-      await axios.delete(
-        `http://localhost:5000/api/teachers/${id}`
-      );
+        await axios.delete(
+          `http://localhost:5000/api/teachers/${id}`
+        );
 
-      Swal.fire({
+        Swal.fire({
 
-        icon: "success",
+          icon: "success",
 
-        title: "Deleted",
+          title: "Deleted",
 
-        text:
-          "Teacher Deleted Successfully",
+          text:
+            "Teacher Deleted Successfully",
 
-        timer: 2000,
+          timer: 2000,
 
-        showConfirmButton: false
+          showConfirmButton: false
 
-      });
+        });
 
-      getTeachers();
+        getTeachers();
 
-    } catch (error) {
+      } catch (error) {
 
-      console.log(error);
+        console.log(error);
 
-    }
+      }
 
-  };
+    };
 
 
 
@@ -473,7 +556,7 @@ if (profileImage) {
 
             <div className="grid grid-cols-3 gap-5">
 
-              {/* TEACHER NAME */}
+              {/* NAME */}
 
               <div>
 
@@ -487,6 +570,7 @@ if (profileImage) {
                   type="text"
                   className="border p-3 rounded-lg w-full"
                   value={teacher_name}
+                  required
                   onChange={(e) =>
                     setTeacherName(e.target.value)
                   }
@@ -545,6 +629,196 @@ if (profileImage) {
 
               </div>
 
+
+
+              {/* SALARY */}
+
+              <div>
+
+                <label className="block mb-2 font-semibold">
+
+                  Salary
+
+                </label>
+
+                <input
+                  type="number"
+                  className="border p-3 rounded-lg w-full"
+                  value={salary}
+                  required
+                  onChange={(e) =>
+                    setSalary(e.target.value)
+                  }
+                  placeholder="Enter Salary"
+                />
+
+              </div>
+
+
+
+              {/* JOINING DATE */}
+
+              <div>
+
+                <label className="block mb-2 font-semibold">
+
+                  Joining Date
+
+                </label>
+
+                <input
+                  type="date"
+                  className="border p-3 rounded-lg w-full"
+                  value={joining_date}
+                  required
+                  onChange={(e) =>
+                    setJoiningDate(e.target.value)
+                  }
+                />
+
+              </div>
+
+
+
+              {/* GENDER */}
+
+              <div>
+
+                <label className="block mb-2 font-semibold">
+
+                  Gender
+
+                </label>
+
+                <select
+                  className="border p-3 rounded-lg w-full"
+                  value={gender}
+                  onChange={(e) =>
+                    setGender(e.target.value)
+                  }
+                >
+
+                  <option value="">
+                    Select Gender
+                  </option>
+
+                  <option value="Male">
+                    Male
+                  </option>
+
+                  <option value="Female">
+                    Female
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+
+
+            {/* STATUS SMALL INPUT */}
+
+            <div className="mt-6 w-[250px]">
+
+              <label className="block mb-2 font-semibold">
+
+                Status
+
+              </label>
+
+              <select
+                className="border p-3 rounded-lg w-full"
+                value={status}
+                required
+                onChange={(e) =>
+                  setStatus(e.target.value)
+                }
+              >
+
+                <option value="Active">
+                  Active
+                </option>
+
+                <option value="Inactive">
+                  Inactive
+                </option>
+
+              </select>
+
+            </div>
+
+
+
+            {/* QUALIFICATION */}
+
+            <div className="mt-6">
+
+              <label className="block mb-2 font-semibold">
+
+                Qualification
+
+              </label>
+
+              <textarea
+                rows="4"
+                className="border p-3 rounded-lg w-full"
+                value={qualification}
+                onChange={(e) =>
+                  setQualification(e.target.value)
+                }
+                placeholder="Enter Qualification"
+              />
+
+            </div>
+
+
+
+            {/* EXPERIENCE */}
+
+            <div className="mt-6">
+
+              <label className="block mb-2 font-semibold">
+
+                Experience
+
+              </label>
+
+              <textarea
+                rows="4"
+                className="border p-3 rounded-lg w-full"
+                value={experience}
+                onChange={(e) =>
+                  setExperience(e.target.value)
+                }
+                placeholder="Enter Experience"
+              />
+
+            </div>
+
+
+
+            {/* ADDRESS */}
+
+            <div className="mt-6">
+
+              <label className="block mb-2 font-semibold">
+
+                Address
+
+              </label>
+
+              <textarea
+                rows="4"
+                className="border p-3 rounded-lg w-full"
+                value={address}
+                onChange={(e) =>
+                  setAddress(e.target.value)
+                }
+                placeholder="Enter Address"
+              />
+
             </div>
 
 
@@ -599,31 +873,34 @@ if (profileImage) {
             </div>
 
 
-            <div>
 
-  <label className="block mb-2 font-semibold">
+            {/* PROFILE IMAGE */}
 
-    Profile Image
+            <div className="mt-6">
 
-  </label>
+              <label className="block mb-2 font-semibold">
 
-  <input
-    type="file"
-    className="border p-3 rounded-lg w-full"
-    onChange={(e) =>
-      setProfileImage(
-        e.target.files[0]
-      )
-    }
-  />
+                Profile Image
 
-</div>
+              </label>
+
+              <input
+                type="file"
+                className="border p-3 rounded-lg w-full"
+                onChange={(e) =>
+                  setProfileImage(
+                    e.target.files[0]
+                  )
+                }
+              />
+
+            </div>
 
 
 
-            {/* BUTTONS */}
+            {/* BUTTON */}
 
-            <div className="flex gap-4 mt-8">
+            <div className="mt-8">
 
               <button
                 type="submit"
@@ -636,22 +913,6 @@ if (profileImage) {
 
               </button>
 
-
-
-              {editId && (
-
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-lg"
-                >
-
-                  Cancel
-
-                </button>
-
-              )}
-
             </div>
 
           </form>
@@ -660,180 +921,165 @@ if (profileImage) {
 
           {/* TABLE */}
 
-<div className="bg-white p-6 rounded-2xl shadow overflow-auto">
+          <div className="bg-white p-6 rounded-2xl shadow overflow-y-auto">
 
-  <table className="w-full">
+            <table className="w-full">
 
-    <thead>
+              <thead>
 
-      <tr className="bg-gray-100">
+                <tr className="bg-gray-100">
 
-        <th className="p-3 text-left">
-          Teacher
-        </th>
+                  <th className="p-3 text-left">
+                    Teacher
+                  </th>
 
-        <th className="p-3 text-left">
-          Email
-        </th>
+                  <th className="p-3 text-left">
+                    Email
+                  </th>
 
-        <th className="p-3 text-left">
-          Phone
-        </th>
+                  <th className="p-3 text-left">
+                    Phone
+                  </th>
 
-        <th className="p-3 text-left">
-          Courses
-        </th>
+                  <th className="p-3 text-left">
+                    Status
+                  </th>
 
-        <th className="p-3 text-left">
-          Action
-        </th>
+                  <th className="p-3 text-left">
+                    Action
+                  </th>
 
-      </tr>
+                </tr>
 
-    </thead>
+              </thead>
 
-    <tbody>
+              <tbody>
 
-      {teachers
-        .filter((teacher) =>
-          teacher.teacher_name
-            ?.toLowerCase()
-            .includes(
-              search.toLowerCase()
-            )
-        )
-        .map((teacher) => (
+                {teachers
+                  .filter((teacher) =>
+                    teacher.teacher_name
+                      ?.toLowerCase()
+                      .includes(
+                        search.toLowerCase()
+                      )
+                  )
+                  .map((teacher) => (
 
-          <tr
-            key={teacher.id}
-            className="border-b"
-          >
+                    <tr
+                      key={teacher.id}
+                      className="border-b"
+                    >
 
-            {/* TEACHER NAME */}
+                      {/* TEACHER */}
 
-            <td className="p-3">
+                      <td className="p-3">
 
-  <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3">
 
-    <img
-      src={
-        teacher.image_url ||
-        "https://via.placeholder.com/50"
-      }
-      alt=""
-      className="w-12 h-12 rounded-full object-cover border"
-    />
+                          <img
+                            src={
+                              teacher.image_url ||
+                              "https://via.placeholder.com/50"
+                            }
+                            alt=""
+                            className="w-12 h-12 rounded-full object-cover border"
+                          />
 
-    <span className="font-semibold">
+                          <span className="font-semibold">
 
-      {teacher.teacher_name}
+                            {teacher.teacher_name}
 
-    </span>
+                          </span>
 
-  </div>
+                        </div>
 
-</td>
-
-            {/* EMAIL */}
-
-            <td className="p-3">
-              {teacher.email}
-            </td>
-
-            {/* PHONE */}
-
-            <td className="p-3">
-              {teacher.phone}
-            </td>
-
-            {/* COURSES DROPDOWN */}
-
-            <td className="p-3">
-
-              <details className="bg-gray-100 rounded-lg p-2 cursor-pointer">
-
-                <summary className="font-semibold text-blue-700">
-
-                  View Courses
-
-                </summary>
-
-                <div className="mt-3 flex flex-wrap gap-2">
-
-                  {teacher.courses
-                    ?.split(",")
-                    .map((course, index) => (
-
-                      <span
-                        key={index}
-                        className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm"
-                      >
-
-                        {course}
-
-                      </span>
-
-                    ))}
-
-                </div>
-
-              </details>
-
-            </td>
-
-            {/* ACTION */}
-
-            <td className="p-3 flex gap-3">
+                      </td>
 
 
 
+                      {/* EMAIL */}
 
-                <button
-  onClick={() =>
-    navigate(`/teachers/${teacher.id}`)
-  }
-  className="bg-green-600 text-white px-4 py-2 rounded-lg"
->
-
-  View
-
-</button>
-
-              <button
-                onClick={() =>
-                  editTeacher(teacher)
-                }
-                className="bg-yellow-500 text-white px-4 py-2 rounded-lg"
-              >
-
-                Edit
-
-              </button>
+                      <td className="p-3">
+                        {teacher.email}
+                      </td>
 
 
 
-              <button
-                onClick={() =>
-                  deleteTeacher(teacher.id)
-                }
-                className="bg-red-500 text-white px-4 py-2 rounded-lg"
-              >
+                      {/* PHONE */}
 
-                Delete
+                      <td className="p-3">
+                        {teacher.phone}
+                      </td>
 
-              </button>
 
-            </td>
 
-          </tr>
+                      {/* STATUS */}
 
-        ))}
+                      <td className="p-3">
 
-    </tbody>
+                        <span
+                          className={`px-3 py-1 rounded-full text-white ${
+                            teacher.status === "Active"
+                              ? "bg-green-500"
+                              : "bg-red-500"
+                          }`}
+                        >
+                          {teacher.status}
+                        </span>
 
-  </table>
+                      </td>
 
-</div>
+
+
+                      {/* ACTION */}
+
+                      <td className="p-3 flex gap-3">
+
+                        <button
+                          onClick={() =>
+                            navigate(`/teachers/${teacher.id}`)
+                          }
+                          className="bg-green-600 text-white px-4 py-2 rounded-lg"
+                        >
+
+                          View
+
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            editTeacher(teacher)
+                          }
+                          className="bg-yellow-500 text-white px-4 py-2 rounded-lg"
+                        >
+
+                          Edit
+
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            deleteTeacher(teacher.id)
+                          }
+                          className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                        >
+
+                          Delete
+
+                        </button>
+
+                      </td>
+
+                    </tr>
+
+                  ))}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
         </div>
 
       </div>

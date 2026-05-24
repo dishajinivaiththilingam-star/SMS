@@ -18,15 +18,20 @@ const addTeacher =
         email,
         phone,
         subject,
-        courses
+        courses,
+        qualification,
+        experience,
+        salary,
+        joining_date,
+        gender,
+        address,
+        status
 
       } = req.body;
 
 
 
-      // =========================
       // PROFILE IMAGE
-      // =========================
 
       const profile_image =
         req.file
@@ -35,15 +40,11 @@ const addTeacher =
 
 
 
-      // =========================
       // COURSES FIX
-      // =========================
 
       let courseList = "";
 
 
-
-      // IF JSON STRING
 
       if (
         typeof courses === "string"
@@ -79,10 +80,6 @@ const addTeacher =
 
       }
 
-
-
-      // IF ARRAY
-
       else if (
         Array.isArray(courses)
       ) {
@@ -92,10 +89,6 @@ const addTeacher =
 
       }
 
-
-
-      // EMPTY
-
       else {
 
         courseList = "";
@@ -104,9 +97,7 @@ const addTeacher =
 
 
 
-      // =========================
       // INSERT
-      // =========================
 
       const { data, error } =
         await supabase
@@ -117,6 +108,13 @@ const addTeacher =
             email,
             phone,
             subject,
+            qualification,
+            experience,
+            salary,
+            joining_date,
+            gender,
+            address,
+            status,
 
             courses:
               courseList,
@@ -192,10 +190,6 @@ const getTeachers =
 
 
 
-      // =========================
-      // IMAGE URL
-      // =========================
-
       const teachers =
         data.map((teacher) => ({
 
@@ -246,21 +240,24 @@ const updateTeacher =
         email,
         phone,
         subject,
-        courses
+        courses,
+        qualification,
+        experience,
+        salary,
+        joining_date,
+        gender,
+        address,
+        status
 
       } = req.body;
 
 
 
-      // =========================
       // COURSES FIX
-      // =========================
 
       let courseList = "";
 
 
-
-      // IF JSON STRING
 
       if (
         typeof courses === "string"
@@ -296,10 +293,6 @@ const updateTeacher =
 
       }
 
-
-
-      // IF ARRAY
-
       else if (
         Array.isArray(courses)
       ) {
@@ -309,10 +302,6 @@ const updateTeacher =
 
       }
 
-
-
-      // EMPTY
-
       else {
 
         courseList = "";
@@ -321,9 +310,7 @@ const updateTeacher =
 
 
 
-      // =========================
       // UPDATE DATA
-      // =========================
 
       let updateData = {
 
@@ -331,6 +318,13 @@ const updateTeacher =
         email,
         phone,
         subject,
+        qualification,
+        experience,
+        salary,
+        joining_date,
+        gender,
+        address,
+        status,
 
         courses:
           courseList
@@ -339,9 +333,7 @@ const updateTeacher =
 
 
 
-      // =========================
-      // PROFILE IMAGE UPDATE
-      // =========================
+      // IMAGE UPDATE
 
       if (req.file) {
 
@@ -352,9 +344,7 @@ const updateTeacher =
 
 
 
-      // =========================
       // UPDATE QUERY
-      // =========================
 
       const { data, error } =
         await supabase
@@ -413,23 +403,6 @@ const deleteTeacher =
         req.params;
 
 
-
-      // =========================
-      // GET IMAGE NAME
-      // =========================
-
-      const { data: teacherData } =
-        await supabase
-          .from("teachers")
-          .select("profile_image")
-          .eq("id", id)
-          .single();
-
-
-
-      // =========================
-      // DELETE TEACHER
-      // =========================
 
       const { error } =
         await supabase

@@ -18,18 +18,28 @@ exports.markAttendance = async (req, res) => {
       .select();
 
     if (error) {
-      return res.status(500).json(error);
+
+      return res.status(500).json({
+        success: false,
+        message: error.message
+      });
+
     }
 
     res.status(201).json({
+
       success: true,
+
       message: "Attendance Marked Successfully",
+
       data
+
     });
 
   } catch (error) {
 
     res.status(500).json({
+      success: false,
       message: error.message
     });
 
@@ -51,10 +61,17 @@ exports.getAttendance = async (req, res) => {
     const { data, error } = await supabase
       .from("attendance")
       .select("*")
-      .order("id", { ascending: false });
+      .order("attendance_date", {
+        ascending: false
+      });
 
     if (error) {
-      return res.status(500).json(error);
+
+      return res.status(500).json({
+        success: false,
+        message: error.message
+      });
+
     }
 
     res.json(data);
@@ -62,6 +79,7 @@ exports.getAttendance = async (req, res) => {
   } catch (error) {
 
     res.status(500).json({
+      success: false,
       message: error.message
     });
 
