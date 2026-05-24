@@ -385,7 +385,7 @@ function StudentView() {
 
           {/* AGREEMENT */}
 
-          
+
         </div>
 
       </div>

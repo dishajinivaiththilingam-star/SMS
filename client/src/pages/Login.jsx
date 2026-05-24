@@ -88,7 +88,9 @@ function Login() {
         )
       );
 
+      navigate("/dashboard");
 
+      window.location.reload();
 
       // =========================
       // SUCCESS ALERT
@@ -235,11 +237,10 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full text-white p-3 rounded-lg font-semibold transition duration-300 ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
-            }`}
+            className={`w-full text-white p-3 rounded-lg font-semibold transition duration-300 ${loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+              }`}
           >
 
             {loading
@@ -251,16 +252,16 @@ function Login() {
 
           <div className="text-right mt-3">
 
-  <Link
-    to="/forgot-password"
-    className="text-blue-600 hover:underline"
-  >
+            <Link
+              to="/forgot-password"
+              className="text-blue-600 hover:underline"
+            >
 
-    Forgot Password?
+              Forgot Password?
 
-  </Link>
+            </Link>
 
-</div>
+          </div>
 
         </form>
 

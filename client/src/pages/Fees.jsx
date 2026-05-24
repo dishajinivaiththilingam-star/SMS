@@ -722,7 +722,7 @@ function Fees() {
                     const statusMatch =
                       statusFilter
                         ? item.payment_status ===
-                          statusFilter
+                        statusFilter
                         : true;
 
 
@@ -801,12 +801,11 @@ function Fees() {
                       <td className="p-3">
 
                         <span
-                          className={`px-3 py-1 rounded text-white ${
-                            item.payment_status ===
-                            "Paid"
+                          className={`px-3 py-1 rounded text-white ${item.payment_status ===
+                              "Paid"
                               ? "bg-green-500"
                               : "bg-red-500"
-                          }`}
+                            }`}
                         >
                           {item.payment_status}
                         </span>

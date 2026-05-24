@@ -10,7 +10,6 @@ function Attendance() {
   const [courses, setCourses] = useState([]);
   const [students, setStudents] = useState([]);
   const [attendanceList, setAttendanceList] = useState([]);
-
   const [course_id, setCourseId] = useState("");
   const [filterDate, setFilterDate] = useState(
     new Date().toISOString().split("T")[0]
@@ -25,19 +24,13 @@ function Attendance() {
   const getCourses = async () => {
 
     try {
-
       const res = await axios.get(
         "http://localhost:5000/api/courses"
       );
-
       setCourses(res.data);
-
     } catch (error) {
-
       console.log(error);
-
     }
-
   };
 
 
@@ -49,19 +42,13 @@ function Attendance() {
   const getStudents = async () => {
 
     try {
-
       const res = await axios.get(
         "http://localhost:5000/api/students"
       );
-
       setStudents(res.data);
-
     } catch (error) {
-
       console.log(error);
-
     }
-
   };
 
 
@@ -73,19 +60,13 @@ function Attendance() {
   const getAttendance = async () => {
 
     try {
-
       const res = await axios.get(
         "http://localhost:5000/api/attendance"
       );
-
       setAttendanceList(res.data);
-
     } catch (error) {
-
       console.log(error);
-
     }
-
   };
 
 
@@ -100,22 +81,15 @@ function Attendance() {
   ) => {
 
     const updatedStudents = students.map((student) => {
-
       if (student.id === studentId) {
-
         return {
           ...student,
           status
         };
-
       }
-
       return student;
-
     });
-
     setStudents(updatedStudents);
-
   };
 
 
@@ -127,15 +101,12 @@ function Attendance() {
   const saveAttendance = async () => {
 
     try {
-
       if (!course_id) {
-
         return Swal.fire({
           title: "Warning!",
           text: "Please Select Course",
           icon: "warning"
         });
-
       }
 
       const attendanceData =
@@ -145,17 +116,12 @@ function Attendance() {
               student.course_id == course_id
           )
           .map((student) => ({
-
             student_id: student.id,
-
             course_id: Number(course_id),
-
             attendance_date: filterDate,
-
             status: student.status || "Absent"
 
           }));
-
 
 
       await axios.post(
@@ -564,11 +530,10 @@ function Attendance() {
                       <td className="p-3">
 
                         <span
-                          className={`px-3 py-1 rounded text-white ${
-                            item.status === "Present"
-                              ? "bg-green-500"
-                              : "bg-red-500"
-                          }`}
+                          className={`px-3 py-1 rounded text-white ${item.status === "Present"
+                            ? "bg-green-500"
+                            : "bg-red-500"
+                            }`}
                         >
                           {item.status}
                         </span>

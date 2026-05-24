@@ -74,99 +74,99 @@ function Courses() {
   const handleSubmit =
     async (e) => {
 
-    e.preventDefault();
+      e.preventDefault();
 
-    try {
+      try {
 
-      // =========================
-      // UPDATE
-      // =========================
+        // =========================
+        // UPDATE
+        // =========================
 
-      if (editId) {
+        if (editId) {
 
-        await axios.put(
-          `http://localhost:5000/api/courses/${editId}`,
-          {
-            course_name,
-            teacher_name,
-            duration,
-            course_fee
-          }
-        );
+          await axios.put(
+            `http://localhost:5000/api/courses/${editId}`,
+            {
+              course_name,
+              teacher_name,
+              duration,
+              course_fee
+            }
+          );
+
+          Swal.fire({
+            icon: "success",
+            title: "Updated",
+            text: "Course Updated Successfully",
+            timer: 2000,
+            showConfirmButton: false
+          });
+
+        }
+
+        // =========================
+        // ADD
+        // =========================
+
+        else {
+
+          await axios.post(
+            "http://localhost:5000/api/courses",
+            {
+              course_name,
+              teacher_name,
+              duration,
+              course_fee
+            }
+          );
+
+          Swal.fire({
+            icon: "success",
+            title: "Added",
+            text: "Course Added Successfully",
+            timer: 2000,
+            showConfirmButton: false
+          });
+
+        }
+
+        // =========================
+        // RELOAD
+        // =========================
+
+        getCourses();
+
+
+
+        // =========================
+        // RESET
+        // =========================
+
+        setEditId(null);
+
+        setCourseName("");
+
+        setTeacherName("");
+
+        setDuration("");
+
+        setCourseFee("");
+
+      } catch (error) {
+
+        console.log(error);
 
         Swal.fire({
-          icon: "success",
-          title: "Updated",
-          text: "Course Updated Successfully",
-          timer: 2000,
-          showConfirmButton: false
+          icon: "error",
+          title: "Error",
+          text:
+            error.response?.data?.message ||
+            "Something went wrong"
         });
 
       }
 
-      // =========================
-      // ADD
-      // =========================
-
-      else {
-
-        await axios.post(
-          "http://localhost:5000/api/courses",
-          {
-            course_name,
-            teacher_name,
-            duration,
-            course_fee
-          }
-        );
-
-        Swal.fire({
-          icon: "success",
-          title: "Added",
-          text: "Course Added Successfully",
-          timer: 2000,
-          showConfirmButton: false
-        });
-
-      }
-
-      // =========================
-      // RELOAD
-      // =========================
-
-      getCourses();
-
-
-
-      // =========================
-      // RESET
-      // =========================
-
-      setEditId(null);
-
-      setCourseName("");
-
-      setTeacherName("");
-
-      setDuration("");
-
-      setCourseFee("");
-
-    } catch (error) {
-
-      console.log(error);
-
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text:
-          error.response?.data?.message ||
-          "Something went wrong"
-      });
-
-    }
-
-  };
+    };
 
 
 
@@ -218,61 +218,61 @@ function Courses() {
   const deleteCourse =
     async (id) => {
 
-    const result =
-      await Swal.fire({
+      const result =
+        await Swal.fire({
 
-        title: "Are you sure?",
+          title: "Are you sure?",
 
-        text:
-          "You won't be able to revert this!",
+          text:
+            "You won't be able to revert this!",
 
-        icon: "warning",
+          icon: "warning",
 
-        showCancelButton: true,
+          showCancelButton: true,
 
-        confirmButtonColor: "#d33",
+          confirmButtonColor: "#d33",
 
-        cancelButtonColor: "#3085d6",
+          cancelButtonColor: "#3085d6",
 
-        confirmButtonText:
-          "Yes, Delete"
+          confirmButtonText:
+            "Yes, Delete"
 
-      });
+        });
 
-    if (!result.isConfirmed)
-      return;
+      if (!result.isConfirmed)
+        return;
 
-    try {
+      try {
 
-      await axios.delete(
-        `http://localhost:5000/api/courses/${id}`
-      );
+        await axios.delete(
+          `http://localhost:5000/api/courses/${id}`
+        );
 
-      Swal.fire({
-        icon: "success",
-        title: "Deleted",
-        text:
-          "Course Deleted Successfully",
-        timer: 2000,
-        showConfirmButton: false
-      });
+        Swal.fire({
+          icon: "success",
+          title: "Deleted",
+          text:
+            "Course Deleted Successfully",
+          timer: 2000,
+          showConfirmButton: false
+        });
 
-      getCourses();
+        getCourses();
 
-    } catch (error) {
+      } catch (error) {
 
-      console.log(error);
+        console.log(error);
 
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text:
-          "Failed to delete course"
-      });
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text:
+            "Failed to delete course"
+        });
 
-    }
+      }
 
-  };
+    };
 
 
 
@@ -622,13 +622,13 @@ function Courses() {
                 )
             ).length === 0 && (
 
-              <p className="text-center text-gray-500 mt-5">
+                <p className="text-center text-gray-500 mt-5">
 
-                No Courses Found
+                  No Courses Found
 
-              </p>
+                </p>
 
-            )}
+              )}
 
           </div>
 

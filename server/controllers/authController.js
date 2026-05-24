@@ -173,9 +173,25 @@ exports.resetPassword =
       const {
 
         email,
-        password
+        password,
+        secretKey
 
       } = req.body;
+      if (
+        secretKey !==
+        process.env.ADMIN_SECRET_KEY
+      ) {
+
+        return res.status(400).json({
+
+          success: false,
+
+          message:
+            "Invalid Secret Key"
+
+        });
+
+      }
 
 
 

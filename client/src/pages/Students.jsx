@@ -61,7 +61,7 @@ function Students() {
   const [exam_results, setExamResults] = useState("");
   const [other_qualifications, setOtherQualifications] = useState("");
 
-  
+
 
   // =========================
   // AUTO-GENERATE STUDENT ID
@@ -558,11 +558,10 @@ function Students() {
                     return (
                       <label
                         key={course.id}
-                        className={`flex items-center gap-3 border-2 p-3 rounded-xl cursor-pointer transition-all ${
-                          isSelected
+                        className={`flex items-center gap-3 border-2 p-3 rounded-xl cursor-pointer transition-all ${isSelected
                             ? "border-blue-500 bg-blue-50"
                             : "border-gray-200 hover:border-blue-300 bg-white"
-                        }`}
+                          }`}
                       >
                         <input
                           type="checkbox"
@@ -659,7 +658,7 @@ function Students() {
               </div>
             </div>
 
-            
+
             {/* SUBMIT BUTTONS */}
             <div className="flex gap-4 pt-6">
               <button

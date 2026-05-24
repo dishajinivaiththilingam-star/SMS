@@ -1,5 +1,5 @@
 import { useEffect, useState }
-from "react";
+  from "react";
 
 import {
   useParams
@@ -8,10 +8,10 @@ import {
 import axios from "axios";
 
 import Sidebar
-from "../components/Sidebar";
+  from "../components/Sidebar";
 
 import Navbar
-from "../components/Navbar";
+  from "../components/Navbar";
 
 function TeacherProfile() {
 
@@ -271,11 +271,10 @@ function TeacherProfile() {
                     </p>
 
                     <span
-                      className={`px-4 py-2 rounded-full text-white font-semibold ${
-                        teacher.status === "Active"
+                      className={`px-4 py-2 rounded-full text-white font-semibold ${teacher.status === "Active"
                           ? "bg-green-500"
                           : "bg-red-500"
-                      }`}
+                        }`}
                     >
 
                       {teacher.status || "Inactive"}

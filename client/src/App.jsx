@@ -91,22 +91,22 @@ function App() {
   const getDashboardData =
     async () => {
 
-    try {
+      try {
 
-      const res =
-        await axios.get(
-          "http://localhost:5000/api/dashboard"
-        );
+        const res =
+          await axios.get(
+            "http://localhost:5000/api/dashboard"
+          );
 
-      setDashboard(res.data);
+        setDashboard(res.data);
 
-    } catch (error) {
+      } catch (error) {
 
-      console.log(error);
+        console.log(error);
 
-    }
+      }
 
-  };
+    };
 
 
 
@@ -332,8 +332,8 @@ function App() {
                           key={`cell-${index}`}
                           fill={
                             COLORS[
-                              index %
-                              COLORS.length
+                            index %
+                            COLORS.length
                             ]
                           }
                         />

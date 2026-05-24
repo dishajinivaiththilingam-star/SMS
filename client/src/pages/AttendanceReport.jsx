@@ -359,11 +359,10 @@ function AttendanceReport() {
                       <td className="p-3">
 
                         <span
-                          className={`px-3 py-1 rounded text-white ${
-                            item.status === "Present"
+                          className={`px-3 py-1 rounded text-white ${item.status === "Present"
                               ? "bg-green-500"
                               : "bg-red-500"
-                          }`}
+                            }`}
                         >
                           {item.status}
                         </span>

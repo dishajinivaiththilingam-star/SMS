@@ -93,10 +93,10 @@ router.get("/", async (req, res) => {
     const attendancePercentage =
       totalAttendance > 0
         ? (
-            (totalPresent /
-              totalAttendance) *
-            100
-          ).toFixed(0)
+          (totalPresent /
+            totalAttendance) *
+          100
+        ).toFixed(0)
         : 0;
 
 

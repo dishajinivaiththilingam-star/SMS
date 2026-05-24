@@ -31,43 +31,43 @@ function Profile() {
   const getProfile =
     async () => {
 
-    try {
+      try {
 
-      const adminData =
-        JSON.parse(
-          localStorage.getItem(
-            "admin"
-          )
-        );
-
-
-
-      const res =
-        await axios.get(
-          `http://localhost:5000/api/profile/${adminData.id}`
-        );
+        const adminData =
+          JSON.parse(
+            localStorage.getItem(
+              "admin"
+            )
+          );
 
 
 
-      setAdmin(res.data);
+        const res =
+          await axios.get(
+            `http://localhost:5000/api/profile/${adminData.id}`
+          );
 
-      setName(res.data.name);
 
-      setEmail(res.data.email);
 
-    } catch (error) {
+        setAdmin(res.data);
 
-      console.log(error);
+        setName(res.data.name);
 
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Failed to load profile"
-      });
+        setEmail(res.data.email);
 
-    }
+      } catch (error) {
 
-  };
+        console.log(error);
+
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to load profile"
+        });
+
+      }
+
+    };
 
 
 
@@ -78,98 +78,98 @@ function Profile() {
   const updateProfile =
     async (e) => {
 
-    e.preventDefault();
+      e.preventDefault();
 
 
 
-    try {
+      try {
 
-      const formData =
-        new FormData();
-
-
-
-      formData.append(
-        "name",
-        name
-      );
+        const formData =
+          new FormData();
 
 
-
-      formData.append(
-        "email",
-        email
-      );
-
-
-
-      if (password) {
 
         formData.append(
-          "password",
-          password
+          "name",
+          name
         );
+
+
+
+        formData.append(
+          "email",
+          email
+        );
+
+
+
+        if (password) {
+
+          formData.append(
+            "password",
+            password
+          );
+
+        }
+
+
+
+        if (photo) {
+
+          formData.append(
+            "photo",
+            photo
+          );
+
+        }
+
+
+
+        const adminData =
+          JSON.parse(
+            localStorage.getItem(
+              "admin"
+            )
+          );
+
+
+
+        await axios.put(
+          `http://localhost:5000/api/profile/${adminData.id}`,
+          formData
+        );
+
+
+
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Profile Updated Successfully",
+          timer: 2000,
+          showConfirmButton: false
+        });
+
+
+
+        getProfile();
+
+        setPassword("");
+
+      } catch (error) {
+
+        console.log(error);
+
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text:
+            error.response?.data?.message ||
+            "Failed to update profile"
+        });
 
       }
 
-
-
-      if (photo) {
-
-        formData.append(
-          "photo",
-          photo
-        );
-
-      }
-
-
-
-      const adminData =
-        JSON.parse(
-          localStorage.getItem(
-            "admin"
-          )
-        );
-
-
-
-      await axios.put(
-        `http://localhost:5000/api/profile/${adminData.id}`,
-        formData
-      );
-
-
-
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "Profile Updated Successfully",
-        timer: 2000,
-        showConfirmButton: false
-      });
-
-
-
-      getProfile();
-
-      setPassword("");
-
-    } catch (error) {
-
-      console.log(error);
-
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text:
-          error.response?.data?.message ||
-          "Failed to update profile"
-      });
-
-    }
-
-  };
+    };
 
 
 

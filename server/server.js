@@ -114,10 +114,10 @@ const marksRoutes =
 const testMailRoutes =
   require("./routes/testMailRoutes");
 
-  const teacherRoutes =
+const teacherRoutes =
   require("./routes/teacherRoutes");
 
-  
+
 
 
 // =========================

@@ -19,6 +19,8 @@ function ForgotPassword() {
   const [password, setPassword] =
     useState("");
 
+  const [secretKey, setSecretKey] =
+    useState("");
 
 
   // =========================
@@ -38,7 +40,8 @@ function ForgotPassword() {
 
             email,
 
-            password
+            password,
+            secretKey
 
           }
         );
@@ -113,7 +116,16 @@ function ForgotPassword() {
           }
           required
         />
-
+        <input
+          type="text"
+          placeholder="Enter Secret Key"
+          className="border p-3 rounded-lg w-full mb-5"
+          value={secretKey}
+          onChange={(e) =>
+            setSecretKey(e.target.value)
+          }
+          required
+        />
 
 
         {/* NEW PASSWORD */}

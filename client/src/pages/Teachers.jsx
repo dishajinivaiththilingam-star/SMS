@@ -1018,11 +1018,10 @@ function Teachers() {
                       <td className="p-3">
 
                         <span
-                          className={`px-3 py-1 rounded-full text-white ${
-                            teacher.status === "Active"
+                          className={`px-3 py-1 rounded-full text-white ${teacher.status === "Active"
                               ? "bg-green-500"
                               : "bg-red-500"
-                          }`}
+                            }`}
                         >
                           {teacher.status}
                         </span>

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-
 import axios from "axios";
-
 import {
   Bell,
   Moon,
@@ -59,24 +57,24 @@ function Navbar() {
   const getNotifications =
     async () => {
 
-    try {
+      try {
 
-      const res =
-        await axios.get(
-          "http://localhost:5000/api/notifications"
+        const res =
+          await axios.get(
+            "http://localhost:5000/api/notifications"
+          );
+
+        setNotifications(
+          res.data
         );
 
-      setNotifications(
-        res.data
-      );
+      } catch (error) {
 
-    } catch (error) {
+        console.log(error);
 
-      console.log(error);
+      }
 
-    }
-
-  };
+    };
 
 
 
@@ -148,20 +146,14 @@ function Navbar() {
       <div>
 
         <h1 className="text-2xl font-bold text-gray-800">
-
           Student Management System
-
         </h1>
 
         <p className="text-sm text-gray-500 mt-1">
-
           Welcome Back{" "}
           <span className="font-semibold">
-
             {admin?.name || "Admin"}
-
           </span>
-
         </p>
 
       </div>
@@ -172,44 +164,22 @@ function Navbar() {
 
       <div className="flex items-center gap-6">
 
-        {/* DARK MODE */}
-
-        {/* <button
-          onClick={toggleDarkMode}
-          className="bg-gray-100 hover:bg-gray-200 p-3 rounded-full transition"
-        >
-
-          {darkMode
-            ? <Sun size={20} />
-            : <Moon size={20} />
-          }
-
-        </button> */}
-
-
-
         {/* PROFILE */}
 
         <div className="flex items-center gap-3 bg-gray-100 px-4 py-2 rounded-xl">
 
           <div className="bg-blue-600 text-white p-2 rounded-full">
-
             <User size={18} />
-
           </div>
 
           <div>
 
             <p className="text-sm font-semibold text-gray-800">
-
               {admin?.name || "Administrator"}
-
             </p>
 
             <p className="text-xs text-gray-500">
-
               {admin?.email || "admin@gmail.com"}
-
             </p>
 
           </div>
@@ -240,11 +210,9 @@ function Navbar() {
             {notifications.length > 0 && (
 
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-
                 {
                   notifications.length
                 }
-
               </span>
 
             )}
@@ -262,17 +230,13 @@ function Navbar() {
               <div className="flex justify-between items-center mb-5">
 
                 <h2 className="text-xl font-bold text-gray-800">
-
                   Notifications
-
                 </h2>
 
                 <span className="text-sm text-blue-600">
-
                   {
                     notifications.length
                   } New
-
                 </span>
 
               </div>
@@ -282,13 +246,9 @@ function Navbar() {
               {/* EMPTY */}
 
               {notifications.length === 0 && (
-
                 <div className="text-center py-10 text-gray-500">
-
                   No Notifications
-
                 </div>
-
               )}
 
 
@@ -306,29 +266,21 @@ function Navbar() {
                     >
 
                       <h3 className="font-semibold text-gray-800">
-
                         {item.title}
-
                       </h3>
 
-
-
                       <p className="text-sm text-gray-600 mt-1">
-
                         {item.message}
-
                       </p>
 
 
 
                       <p className="text-xs text-gray-400 mt-2">
-
                         {
                           new Date(
                             item.created_at
                           ).toLocaleString()
                         }
-
                       </p>
 
                     </div>
@@ -352,11 +304,8 @@ function Navbar() {
           onClick={handleLogout}
           className="bg-red-500 hover:bg-red-600 text-white px-5 py-3 rounded-xl flex items-center gap-2 transition"
         >
-
           <LogOut size={18} />
-
           Logout
-
         </button>
 
       </div>

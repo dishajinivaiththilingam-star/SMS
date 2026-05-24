@@ -78,22 +78,22 @@ function Marks() {
   const getStudents =
     async () => {
 
-    try {
+      try {
 
-      const res =
-        await axios.get(
-          "http://localhost:5000/api/students"
-        );
+        const res =
+          await axios.get(
+            "http://localhost:5000/api/students"
+          );
 
-      setStudents(res.data);
+        setStudents(res.data);
 
-    } catch (error) {
+      } catch (error) {
 
-      console.log(error);
+        console.log(error);
 
-    }
+      }
 
-  };
+    };
 
 
 
@@ -104,22 +104,22 @@ function Marks() {
   const getCourses =
     async () => {
 
-    try {
+      try {
 
-      const res =
-        await axios.get(
-          "http://localhost:5000/api/courses"
-        );
+        const res =
+          await axios.get(
+            "http://localhost:5000/api/courses"
+          );
 
-      setCourses(res.data);
+        setCourses(res.data);
 
-    } catch (error) {
+      } catch (error) {
 
-      console.log(error);
+        console.log(error);
 
-    }
+      }
 
-  };
+    };
 
 
 
@@ -130,68 +130,68 @@ function Marks() {
   const addMarks =
     async (e) => {
 
-    e.preventDefault();
+      e.preventDefault();
 
-    try {
+      try {
 
-      await axios.post(
-        "http://localhost:5000/api/marks",
-        {
+        await axios.post(
+          "http://localhost:5000/api/marks",
+          {
 
-          student_id,
-          course_id,
-          exam_name,
-          total_marks,
-          obtained_marks
+            student_id,
+            course_id,
+            exam_name,
+            total_marks,
+            obtained_marks
 
-        }
-      );
-
-
-
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "Marks Added Successfully",
-        timer: 2000,
-        showConfirmButton: false
-      });
+          }
+        );
 
 
 
-      // REFRESH
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Marks Added Successfully",
+          timer: 2000,
+          showConfirmButton: false
+        });
 
-      getMarks();
+
+
+        // REFRESH
+
+        getMarks();
 
 
 
-      // RESET
+        // RESET
 
-      setStudentId("");
+        setStudentId("");
 
-      setCourseId("");
+        setCourseId("");
 
-      setExamName("");
+        setExamName("");
 
-      setTotalMarks("");
+        setTotalMarks("");
 
-      setObtainedMarks("");
+        setObtainedMarks("");
 
-    } catch (error) {
+      } catch (error) {
 
-      console.log(error);
+        console.log(error);
 
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text:
-          error.response?.data?.message ||
-          "Failed to add marks"
-      });
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text:
+            error.response?.data?.message ||
+            "Failed to add marks"
+        });
 
-    }
+      }
 
-  };
+    };
 
 
 
@@ -202,69 +202,69 @@ function Marks() {
   const deleteMarks =
     async (id) => {
 
-    const result =
-      await Swal.fire({
+      const result =
+        await Swal.fire({
 
-        title: "Are you sure?",
+          title: "Are you sure?",
 
-        text:
-          "You won't be able to revert this!",
+          text:
+            "You won't be able to revert this!",
 
-        icon: "warning",
+          icon: "warning",
 
-        showCancelButton: true,
+          showCancelButton: true,
 
-        confirmButtonColor: "#d33",
+          confirmButtonColor: "#d33",
 
-        cancelButtonColor: "#3085d6",
+          cancelButtonColor: "#3085d6",
 
-        confirmButtonText:
-          "Yes, Delete"
+          confirmButtonText:
+            "Yes, Delete"
 
-      });
-
-
-
-    if (!result.isConfirmed)
-      return;
+        });
 
 
 
-    try {
-
-      await axios.delete(
-        `http://localhost:5000/api/marks/${id}`
-      );
+      if (!result.isConfirmed)
+        return;
 
 
 
-      Swal.fire({
-        icon: "success",
-        title: "Deleted",
-        text:
-          "Marks Deleted Successfully",
-        timer: 2000,
-        showConfirmButton: false
-      });
+      try {
+
+        await axios.delete(
+          `http://localhost:5000/api/marks/${id}`
+        );
 
 
 
-      getMarks();
+        Swal.fire({
+          icon: "success",
+          title: "Deleted",
+          text:
+            "Marks Deleted Successfully",
+          timer: 2000,
+          showConfirmButton: false
+        });
 
-    } catch (error) {
 
-      console.log(error);
 
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text:
-          "Failed to delete marks"
-      });
+        getMarks();
 
-    }
+      } catch (error) {
 
-  };
+        console.log(error);
+
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text:
+            "Failed to delete marks"
+        });
+
+      }
+
+    };
 
 
 
@@ -640,12 +640,11 @@ function Marks() {
                       <td className="p-3">
 
                         <span
-                          className={`px-3 py-1 rounded text-white ${
-                            item.status ===
-                            "Pass"
+                          className={`px-3 py-1 rounded text-white ${item.status ===
+                              "Pass"
                               ? "bg-green-500"
                               : "bg-red-500"
-                          }`}
+                            }`}
                         >
 
                           {item.status}
