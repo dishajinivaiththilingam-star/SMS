@@ -5,8 +5,6 @@ const {
 
   login,
 
-  forgotPassword,
-
   resetPassword
 
 } = require(
@@ -22,17 +20,6 @@ const {
 router.post(
   "/login",
   login
-);
-
-
-
-// =========================
-// FORGOT PASSWORD
-// =========================
-
-router.post(
-  "/forgot-password",
-  forgotPassword
 );
 
 

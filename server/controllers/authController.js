@@ -157,76 +157,7 @@ exports.login =
 
 
 
-// =========================
-// FORGOT PASSWORD
-// =========================
 
-exports.forgotPassword =
-  async (req, res) => {
-
-    try {
-
-      const { email } =
-        req.body;
-
-
-
-      const { error } =
-        await supabase.auth
-          .resetPasswordForEmail(
-            email,
-            {
-
-              redirectTo:
-                "http://localhost:5173/reset-password"
-
-            }
-          );
-
-
-
-      if (error) {
-
-        return res.status(400).json({
-
-          success: false,
-
-          message:
-            error.message
-
-        });
-
-      }
-
-
-
-      res.json({
-
-        success: true,
-
-        message:
-          "Password reset link sent to email"
-
-      });
-
-    } catch (error) {
-
-      console.log(error);
-
-
-
-      res.status(500).json({
-
-        success: false,
-
-        message:
-          "Server Error"
-
-      });
-
-    }
-
-  };
 
 
 

@@ -4,18 +4,28 @@ import axios from "axios";
 
 import Swal from "sweetalert2";
 
+import {
+  useNavigate
+} from "react-router-dom";
+
 function ForgotPassword() {
 
+  const navigate =
+    useNavigate();
+
   const [email, setEmail] =
+    useState("");
+
+  const [password, setPassword] =
     useState("");
 
 
 
   // =========================
-  // SEND RESET LINK
+  // RESET PASSWORD
   // =========================
 
-  const handleForgotPassword =
+  const handleResetPassword =
     async (e) => {
 
       e.preventDefault();
@@ -23,8 +33,14 @@ function ForgotPassword() {
       try {
 
         await axios.post(
-          "http://localhost:5000/api/auth/forgot-password",
-          { email }
+          "http://localhost:5000/api/auth/reset-password",
+          {
+
+            email,
+
+            password
+
+          }
         );
 
 
@@ -36,9 +52,13 @@ function ForgotPassword() {
           title: "Success",
 
           text:
-            "Password reset link sent to your email"
+            "Password Changed Successfully"
 
         });
+
+
+
+        navigate("/");
 
       } catch (error) {
 
@@ -69,17 +89,19 @@ function ForgotPassword() {
     <div className="min-h-screen flex justify-center items-center bg-gray-100">
 
       <form
-        onSubmit={handleForgotPassword}
+        onSubmit={handleResetPassword}
         className="bg-white p-10 rounded-2xl shadow-lg w-[400px]"
       >
 
         <h1 className="text-3xl font-bold mb-6 text-center">
 
-          Forgot Password
+          Reset Password
 
         </h1>
 
 
+
+        {/* EMAIL */}
 
         <input
           type="email"
@@ -94,12 +116,29 @@ function ForgotPassword() {
 
 
 
+        {/* NEW PASSWORD */}
+
+        <input
+          type="password"
+          placeholder="Enter New Password"
+          className="border p-3 rounded-lg w-full mb-5"
+          value={password}
+          onChange={(e) =>
+            setPassword(e.target.value)
+          }
+          required
+        />
+
+
+
+        {/* BUTTON */}
+
         <button
           type="submit"
           className="bg-blue-600 hover:bg-blue-700 text-white w-full py-3 rounded-lg"
         >
 
-          Send Reset Link
+          Change Password
 
         </button>
 
