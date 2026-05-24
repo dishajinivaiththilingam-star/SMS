@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Login() {
 
@@ -246,6 +247,20 @@ function Login() {
               : "Login"}
 
           </button>
+
+
+          <div className="text-right mt-3">
+
+  <Link
+    to="/forgot-password"
+    className="text-blue-600 hover:underline"
+  >
+
+    Forgot Password?
+
+  </Link>
+
+</div>
 
         </form>
 

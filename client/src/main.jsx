@@ -65,8 +65,14 @@ import StudentView
 import Teachers
   from "./pages/Teachers";
 
-  import TeacherProfile
-from "./pages/TeacherProfile";
+import TeacherProfile
+  from "./pages/TeacherProfile";
+
+import ForgotPassword
+  from "./pages/ForgotPassword";
+
+import ResetPassword
+  from "./pages/ResetPassword";
 
 
 
@@ -93,6 +99,15 @@ ReactDOM.createRoot(
             element={<Login />}
           />
 
+          <Route
+            path="/forgot-password"
+            element={<ForgotPassword />}
+          />
+
+          <Route
+            path="/reset-password"
+            element={<ResetPassword />}
+          />
 
 
           {/* DASHBOARD */}
@@ -197,27 +212,27 @@ ReactDOM.createRoot(
 
 
 
-<Route
-  path="/teachers"
-  element={
-    <ProtectedRoute>
+          <Route
+            path="/teachers"
+            element={
+              <ProtectedRoute>
 
-      <Teachers />
+                <Teachers />
 
-    </ProtectedRoute>
-  }
-/>
+              </ProtectedRoute>
+            }
+          />
 
-<Route
-  path="/teachers/:id"
-  element={
-    <ProtectedRoute>
+          <Route
+            path="/teachers/:id"
+            element={
+              <ProtectedRoute>
 
-      <TeacherProfile />
+                <TeacherProfile />
 
-    </ProtectedRoute>
-  }
-/>
+              </ProtectedRoute>
+            }
+          />
 
 
           {/* ATTENDANCE REPORT */}

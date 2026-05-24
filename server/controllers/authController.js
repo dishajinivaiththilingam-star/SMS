@@ -1,60 +1,324 @@
-const supabase = require("../config/supabase");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const supabase =
+  require("../config/supabase");
 
-exports.login = async (req, res) => {
+const bcrypt =
+  require("bcryptjs");
 
-  try {
+const jwt =
+  require("jsonwebtoken");
 
-    const { email, password } = req.body;
 
-    const { data, error } = await supabase
-      .from("admins")
-      .select("*")
-      .eq("email", email)
-      .single();
 
-    if (error || !data) {
-      return res.status(404).json({
-        message: "Admin not found"
+// =========================
+// LOGIN
+// =========================
+
+exports.login =
+  async (req, res) => {
+
+    try {
+
+      const {
+
+        email,
+        password
+
+      } = req.body;
+
+
+
+      // =========================
+      // CHECK ADMIN
+      // =========================
+
+      const { data, error } =
+        await supabase
+          .from("admins")
+          .select("*")
+          .eq("email", email)
+          .single();
+
+
+
+      if (error || !data) {
+
+        return res.status(404).json({
+
+          success: false,
+
+          message:
+            "Admin not found"
+
+        });
+
+      }
+
+
+
+      // =========================
+      // PASSWORD CHECK
+      // =========================
+
+      const isMatch =
+        await bcrypt.compare(
+          password,
+          data.password
+        );
+
+
+
+      if (!isMatch) {
+
+        return res.status(400).json({
+
+          success: false,
+
+          message:
+            "Invalid Password"
+
+        });
+
+      }
+
+
+
+      // =========================
+      // JWT TOKEN
+      // =========================
+
+      const token =
+        jwt.sign(
+
+          {
+
+            id: data.id,
+
+            role: data.role
+
+          },
+
+          process.env.JWT_SECRET,
+
+          {
+
+            expiresIn: "7d"
+
+          }
+
+        );
+
+
+
+      // =========================
+      // RESPONSE
+      // =========================
+
+      res.json({
+
+        success: true,
+
+        message:
+          "Login Successful",
+
+        token,
+
+        admin: {
+
+          id: data.id,
+
+          name: data.name,
+
+          email: data.email,
+
+          role: data.role
+
+        }
+
       });
+
+    } catch (error) {
+
+      console.log(error);
+
+
+
+      res.status(500).json({
+
+        success: false,
+
+        message:
+          error.message
+
+      });
+
     }
 
-    const isMatch = password === "123456";
+  };
 
-    if (!isMatch) {
-      return res.status(400).json({
-        message: "Invalid Password"
+
+
+// =========================
+// FORGOT PASSWORD
+// =========================
+
+exports.forgotPassword =
+  async (req, res) => {
+
+    try {
+
+      const { email } =
+        req.body;
+
+
+
+      const { error } =
+        await supabase.auth
+          .resetPasswordForEmail(
+            email,
+            {
+
+              redirectTo:
+                "http://localhost:5173/reset-password"
+
+            }
+          );
+
+
+
+      if (error) {
+
+        return res.status(400).json({
+
+          success: false,
+
+          message:
+            error.message
+
+        });
+
+      }
+
+
+
+      res.json({
+
+        success: true,
+
+        message:
+          "Password reset link sent to email"
+
       });
+
+    } catch (error) {
+
+      console.log(error);
+
+
+
+      res.status(500).json({
+
+        success: false,
+
+        message:
+          "Server Error"
+
+      });
+
     }
 
-    const token = jwt.sign(
-      {
-        id: data.id,
-        role: data.role
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d"
+  };
+
+
+
+// =========================
+// RESET PASSWORD
+// =========================
+
+exports.resetPassword =
+  async (req, res) => {
+
+    try {
+
+      const {
+
+        email,
+        password
+
+      } = req.body;
+
+
+
+      // =========================
+      // HASH PASSWORD
+      // =========================
+
+      const hashedPassword =
+        await bcrypt.hash(
+          password,
+          10
+        );
+
+
+
+      // =========================
+      // UPDATE PASSWORD
+      // =========================
+
+      const { data, error } =
+        await supabase
+          .from("admins")
+          .update({
+
+            password:
+              hashedPassword
+
+          })
+          .eq("email", email)
+          .select();
+
+
+
+      if (error) {
+
+        return res.status(400).json({
+
+          success: false,
+
+          message:
+            error.message
+
+        });
+
       }
-    );
 
-    res.json({
-      success: true,
-      token,
-      admin: {
-        id: data.id,
-        name: data.name,
-        email: data.email
-      }
-    });
 
-  } catch (error) {
 
-    res.status(500).json({
-      message: error.message
-    });
+      res.json({
 
-  }
+        success: true,
 
-};
+        message:
+          "Password Updated Successfully",
+
+        data
+
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+
+
+      res.status(500).json({
+
+        success: false,
+
+        message:
+          "Server Error"
+
+      });
+
+    }
+
+  };
