@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 
 import axios from "axios";
 
-import { useParams } from "react-router-dom";
+import {
+  useParams,
+  useNavigate,
+} from "react-router-dom";
+
+import Swal from "sweetalert2";
 
 import Sidebar from "../components/Sidebar";
 
@@ -18,6 +23,8 @@ function StudentView() {
 
   const { id } = useParams();
 
+  const navigate = useNavigate();
+
 
 
   // =========================
@@ -26,6 +33,10 @@ function StudentView() {
 
   const [student, setStudent] =
     useState(null);
+
+  const [courses, setCourses] =
+    useState([]);
+
 
 
 
@@ -55,12 +66,190 @@ function StudentView() {
 
 
   // =========================
+  // GET COURSES
+  // =========================
+
+  const getCourses = async () => {
+
+    try {
+
+      const res = await axios.get(
+        "http://localhost:5000/api/courses"
+      );
+
+      setCourses(res.data.data || res.data);
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+  };
+
+
+
+  // =========================
+  // GET COURSE NAMES
+  // =========================
+
+  const getCourseNames = () => {
+
+    if (!student) return [];
+
+    let ids = [];
+
+
+
+    // MULTIPLE COURSES
+
+    if (
+      student.course_ids &&
+      Array.isArray(student.course_ids)
+    ) {
+
+      ids = student.course_ids;
+
+    }
+
+
+
+    // STRING JSON
+
+    else if (
+      typeof student.course_ids === "string"
+    ) {
+
+      try {
+
+        ids = JSON.parse(student.course_ids);
+
+      } catch {
+
+        ids = [];
+
+      }
+    }
+
+
+
+    // SINGLE COURSE
+
+    else if (student.course_id) {
+
+      ids = [student.course_id];
+
+    }
+
+
+
+    return ids
+      .map((cid) =>
+        courses.find(
+          (c) => String(c.id) === String(cid)
+        )?.course_name
+      )
+      .filter(Boolean);
+  };
+
+
+
+  // =========================
+  // DELETE STUDENT
+  // =========================
+
+  const handleDelete = async () => {
+
+    const result = await Swal.fire({
+
+      title: "Are you sure?",
+
+      text: "Student will be deleted permanently",
+
+      icon: "warning",
+
+      showCancelButton: true,
+
+      confirmButtonColor: "#d33",
+
+      cancelButtonColor: "#3085d6",
+
+      confirmButtonText: "Yes, Delete",
+
+    });
+
+
+
+    if (result.isConfirmed) {
+
+      try {
+
+        await axios.delete(
+          `http://localhost:5000/api/students/${id}`
+        );
+
+
+
+        Swal.fire({
+
+          icon: "success",
+
+          title: "Deleted",
+
+          text: "Student Deleted Successfully",
+
+          timer: 2000,
+
+          showConfirmButton: false,
+
+        });
+
+
+
+        navigate("/student-list");
+
+      } catch (error) {
+
+        console.log(error);
+
+
+
+        Swal.fire({
+
+          icon: "error",
+
+          title: "Error",
+
+          text: "Delete Failed",
+
+        });
+
+      }
+    }
+  };
+
+
+
+  // =========================
+  // EDIT STUDENT
+  // =========================
+
+  const handleEdit = () => {
+
+    navigate(`/students/edit/${id}`);
+
+  };
+
+
+
+  // =========================
   // LOAD
   // =========================
 
   useEffect(() => {
 
     getStudent();
+
+    getCourses();
 
   }, []);
 
@@ -102,6 +291,11 @@ function StudentView() {
 
 
 
+  const courseNames = getCourseNames();
+
+
+
+
   return (
 
     <div className="flex">
@@ -118,62 +312,132 @@ function StudentView() {
 
           <div className="bg-white rounded-2xl shadow p-8 mb-8">
 
-            <div className="flex items-center gap-8">
+            <div className="flex justify-between items-start">
 
-              {/* IMAGE */}
+              <div className="flex items-center gap-8">
 
-              <img
-                src={
-                  student.image_url
-                    ? student.image_url
-                    : `https://ui-avatars.com/api/?name=${student.student_name}`
-                }
+                {/* IMAGE */}
 
-                alt="Student"
+                <img
+                  src={
+                    student.image_url
+                      ? student.image_url
+                      : `https://ui-avatars.com/api/?name=${student.student_name}`
+                  }
 
-                className="w-40 h-40 rounded-full object-cover border-4 border-blue-500"
-              />
+                  alt="Student"
+
+                  className="w-40 h-40 rounded-full object-cover border-4 border-blue-500"
+                />
 
 
 
-              {/* BASIC DETAILS */}
+                {/* BASIC DETAILS */}
 
-              <div>
+                <div>
 
-                <h1 className="text-4xl font-bold text-gray-800 mb-3">
+                  <h1 className="text-4xl font-bold text-gray-800 mb-3">
 
-                  {student.student_name}
+                    {student.student_name}
 
-                </h1>
+                  </h1>
 
-                <p className="text-lg text-gray-600 mb-2">
+                  <p className="text-lg text-gray-600 mb-2">
 
-                  Student ID :
-                  <span className="font-semibold ml-2">
-                    {student.student_id}
-                  </span>
+                    Student ID :
 
-                </p>
+                    <span className="font-semibold ml-2">
 
-                <p className="text-lg text-gray-600 mb-2">
+                      {student.student_id}
 
-                  Course ID :
-                  <span className="font-semibold ml-2">
-                    {student.course_id}
-                  </span>
+                    </span>
 
-                </p>
+                  </p>
 
-                <p className="text-lg text-gray-600">
 
-                  Email :
-                  <span className="font-semibold ml-2">
-                    {student.email}
-                  </span>
 
-                </p>
+                  <p className="text-lg text-gray-600 mb-2">
+
+                    Email :
+
+                    <span className="font-semibold ml-2">
+
+                      {student.email}
+
+                    </span>
+
+                  </p>
+
+
+
+                  {/* COURSES */}
+
+                  <div className="mt-4">
+
+                    <p className="text-lg text-gray-600 mb-2">
+
+                      Courses :
+
+                    </p>
+
+
+
+                    <div className="flex flex-wrap gap-2">
+
+                      {courseNames.length > 0 ? (
+
+                        courseNames.map(
+                          (course, index) => (
+
+                            <span
+                              key={index}
+                              className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold"
+                            >
+                              {course}
+                            </span>
+
+                          )
+                        )
+
+                      ) : (
+
+                        <span className="text-gray-500">
+                          No Courses
+                        </span>
+
+                      )}
+
+                    </div>
+
+                  </div>
+
+                </div>
 
               </div>
+
+
+
+              {/* ACTION BUTTONS */}
+
+              {/* <div className="flex gap-4">
+
+                <button
+                  onClick={handleEdit}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold"
+                >
+                  Edit
+                </button>
+
+
+
+                <button
+                  onClick={handleDelete}
+                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold"
+                >
+                  Delete
+                </button>
+
+              </div> */}
 
             </div>
 
@@ -381,11 +645,6 @@ function StudentView() {
 
           </div>
 
-
-
-          {/* AGREEMENT */}
-
-
         </div>
 
       </div>
@@ -418,7 +677,7 @@ function Detail({ label, value }) {
 
       </p>
 
-    </div>
+    </div>  
 
   );
 

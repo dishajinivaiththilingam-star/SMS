@@ -31,8 +31,6 @@ function App() {
 
       totalCourses: 0,
 
-      totalFees: 0,
-
       attendancePercentage: 0
 
     });
@@ -157,7 +155,7 @@ function App() {
 
           {/* DASHBOARD CARDS */}
 
-          <div className="grid grid-cols-4 gap-5 mt-10">
+          <div className="grid grid-cols-3 gap-5 mt-10">
 
             {/* STUDENTS */}
 
@@ -223,28 +221,6 @@ function App() {
 
             </div>
 
-
-
-            {/* FEES */}
-
-            <div className="bg-white p-6 rounded-xl shadow">
-
-              <h2 className="text-xl font-semibold">
-
-                Fees Collection
-
-              </h2>
-
-              <p className="text-3xl mt-3 font-bold text-red-600">
-
-                Rs.
-                {
-                  dashboard.totalFees
-                }
-
-              </p>
-
-            </div>
 
           </div>
 
@@ -355,76 +331,7 @@ function App() {
 
 
 
-          {/* EXTRA SUMMARY */}
-
-          <div className="grid grid-cols-3 gap-5 mt-10">
-
-            {/* STUDENT CARD */}
-
-            <div className="bg-blue-600 text-white p-6 rounded-xl shadow">
-
-              <h2 className="text-2xl font-bold">
-
-                Students
-
-              </h2>
-
-              <p className="text-5xl mt-4">
-
-                {
-                  dashboard.totalStudents
-                }
-
-              </p>
-
-            </div>
-
-
-
-            {/* COURSE CARD */}
-
-            <div className="bg-green-600 text-white p-6 rounded-xl shadow">
-
-              <h2 className="text-2xl font-bold">
-
-                Courses
-
-              </h2>
-
-              <p className="text-5xl mt-4">
-
-                {
-                  dashboard.totalCourses
-                }
-
-              </p>
-
-            </div>
-
-
-
-            {/* FEES CARD */}
-
-            <div className="bg-red-600 text-white p-6 rounded-xl shadow">
-
-              <h2 className="text-2xl font-bold">
-
-                Total Fees
-
-              </h2>
-
-              <p className="text-4xl mt-4">
-
-                Rs.
-                {
-                  dashboard.totalFees
-                }
-
-              </p>
-
-            </div>
-
-          </div>
+          
 
         </div>
 

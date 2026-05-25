@@ -488,7 +488,7 @@ function Students() {
                 </div>
 
                 <div>
-                  <label className="block mb-2 font-semibold text-gray-700">Student Name</label>
+                  <label className="block mb-2 font-semibold text-gray-700">Student Name <span className=" mb-2  text-red-600">*</span></label>
                   <input type="text" className="border p-3 rounded-lg w-full" value={student_name} required onChange={(e) => setStudentName(e.target.value)} placeholder="Enter Student Name" />
                 </div>
 
