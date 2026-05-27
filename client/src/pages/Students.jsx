@@ -29,7 +29,6 @@ function Students() {
   const [nic, setNic] = useState("");
   const [dob, setDob] = useState("");
   const [occupation, setOccupation] = useState("");
-  const [course_type, setCourseType] = useState("");
   const [admission_date, setAdmissionDate] = useState("");
 
   // CONTACT
@@ -92,7 +91,7 @@ function Students() {
     setStudentId(generateStudentId(existingStudents || students));
     setStudentName(""); setEmail(""); setPhone(""); setGender("");
     setSelectedCourseIds([]); setPhoto(null);
-    setNic(""); setDob(""); setOccupation(""); setCourseType(""); setAdmissionDate("");
+    setNic(""); setDob(""); setOccupation(""); setAdmissionDate("");
     setPermanentAddress(""); setCurrentAddress(""); setDistrict(""); setHomePhone("");
     setFatherName(""); setMotherName(""); setFatherPhone(""); setMotherPhone("");
     setFatherOccupation(""); setMotherOccupation(""); setMonthlyIncome("");
@@ -153,7 +152,6 @@ function Students() {
       setNic(student.nic || "");
       setDob(student.dob || "");
       setOccupation(student.occupation || "");
-      setCourseType(student.course_type || "");
       setAdmissionDate(student.admission_date || "");
       setPermanentAddress(student.permanent_address || "");
       setCurrentAddress(student.current_address || "");
@@ -209,7 +207,6 @@ function Students() {
       formData.append("nic", nic);
       formData.append("dob", dob);
       formData.append("occupation", occupation);
-      formData.append("course_type", course_type);
       formData.append("admission_date", admission_date);
       formData.append("permanent_address", permanent_address);
       formData.append("current_address", current_address);
@@ -372,7 +369,7 @@ function Students() {
                 </div>
 
                 <div>
-                  <label className="block mb-2 font-semibold text-gray-700 text-sm">Email Address</label>
+                  <label className="block mb-2 font-semibold text-gray-700 text-sm">Email Address<span className="text-red-500">*</span></label>
                   <input type="email" className="border p-3 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" value={email} required onChange={(e) => setEmail(e.target.value)} placeholder="Enter Email" />
                 </div>
 
@@ -396,7 +393,7 @@ function Students() {
                 </div>
 
                 <div>
-                  <label className="block mb-2 font-semibold text-gray-700 text-sm">Date of Birth</label>
+                  <label className="block mb-2 font-semibold text-gray-700 text-sm">Date of Birth<span className="text-red-500">*</span></label>
                   <input type="date" className="border p-3 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" value={dob} onChange={(e) => setDob(e.target.value)} />
                 </div>
 
@@ -405,10 +402,6 @@ function Students() {
                   <input type="text" className="border p-3 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" value={occupation} onChange={(e) => setOccupation(e.target.value)} placeholder="Enter Occupation" />
                 </div>
 
-                <div>
-                  <label className="block mb-2 font-semibold text-gray-700 text-sm">Course Type</label>
-                  <input type="text" className="border p-3 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" value={course_type} onChange={(e) => setCourseType(e.target.value)} placeholder="Full Time / Part Time" />
-                </div>
 
                 <div>
                   <label className="block mb-2 font-semibold text-gray-700 text-sm">
@@ -481,7 +474,7 @@ function Students() {
                   <textarea className="border p-3 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" rows="3" value={permanent_address} onChange={(e) => setPermanentAddress(e.target.value)} placeholder="Enter Permanent Address" />
                 </div>
                 <div className="col-span-3">
-                  <label className="block mb-2 font-semibold text-gray-700 text-sm">Current Address</label>
+                  <label className="block mb-2 font-semibold text-gray-700 text-sm">Current Address<span className="text-red-500">*</span></label>
                   <textarea className="border p-3 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" rows="3" value={current_address} onChange={(e) => setCurrentAddress(e.target.value)} placeholder="Enter Current Address" />
                 </div>
                 <div>
@@ -489,7 +482,7 @@ function Students() {
                   <input type="text" className="border p-3 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" value={district} onChange={(e) => setDistrict(e.target.value)} placeholder="Enter District" />
                 </div>
                 <div>
-                  <label className="block mb-2 font-semibold text-gray-700 text-sm">Home Phone Number <span className="text-red-500">*</span></label>
+                  <label className="block mb-2 font-semibold text-gray-700 text-sm">Home Phone Number<span className="text-red-500">*</span></label>
                   <input type="text" className="border p-3 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-400" value={home_phone} required onChange={(e) => setHomePhone(e.target.value)} placeholder="Enter Home Phone Number" />
                 </div>
               </div>
