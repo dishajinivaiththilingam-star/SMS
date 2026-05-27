@@ -29,13 +29,7 @@ router.post(
         agree_discontinue_fee
       } = req.body;
 
-      // =========================
-      // PARSE COURSE IDS
-      // course_id column = integer (first course)
-      // course_ids = JSON array string → store as text in other_qualifications workaround
-      // BUT we use a separate approach: store comma string in a text column
-      // =========================
-
+      // Parse course ids
       let parsedCourseIds = [];
       if (course_ids) {
         try { parsedCourseIds = JSON.parse(course_ids); } catch { parsedCourseIds = []; }
@@ -44,44 +38,17 @@ router.post(
         parsedCourseIds = [String(course_id)];
       }
 
-      // Primary course_id must be integer
       const primaryCourseId = parsedCourseIds.length > 0
         ? parseInt(parsedCourseIds[0])
         : (course_id ? parseInt(course_id) : null);
 
-      // All course IDs as comma string → store in a dedicated way
-      // We'll prefix extra_courses in other_qualifications field
-      // OR: we store in a __course_ids__ marker inside exam_results
-      // BEST: store as JSON string in "other_qualifications" with a special prefix
-      // Actually cleanest: just store comma string separately
-      // Since we can't add column easily, we encode into a special field
-      // We'll use a hidden marker in the DB record
-
-      // Store course_ids as JSON string — we need a text column
-      // Use "course_type" won't work as it's used
-      // FINAL DECISION: store in DB as first course only (integer course_id)
-      // AND store all ids as JSON string in "school_name" prefix — NO that's bad
-      // 
-      // REAL SOLUTION: We add course_ids as a separate insert with a text value
-      // by passing it as extra_data field... but field doesn't exist
-      //
-      // CLEANEST workaround without schema change:
-      // Store course_ids JSON in "district" field with a special prefix IF district is empty
-      // NO — district is used too
-      //
-      // ACTUAL BEST: We store ONLY the primary integer course_id in course_id column
-      // AND store the full list as a JSON-encoded string appended to "other_qualifications"
-      // with a special separator that we can parse back
-
       // Encode course_ids into other_qualifications with a marker
       let otherQualificationsValue = other_qualifications || "";
       const COURSE_IDS_MARKER = "||COURSE_IDS:";
-      // Remove any existing marker first
       if (otherQualificationsValue.includes(COURSE_IDS_MARKER)) {
         otherQualificationsValue = otherQualificationsValue
           .substring(0, otherQualificationsValue.indexOf(COURSE_IDS_MARKER));
       }
-      // Append new course ids
       if (parsedCourseIds.length > 0) {
         otherQualificationsValue = otherQualificationsValue + COURSE_IDS_MARKER + parsedCourseIds.join(",");
       }
@@ -96,7 +63,7 @@ router.post(
           email,
           phone,
           gender,
-          course_id: primaryCourseId,   // integer only
+          course_id: primaryCourseId,
           nic, dob, occupation, course_type, admission_date,
           permanent_address, current_address, district, home_phone,
           father_name, mother_name, father_phone, mother_phone,
@@ -104,7 +71,7 @@ router.post(
           guardian_name, guardian_phone,
           school_name, education_year, qualification,
           exam_results,
-          other_qualifications: otherQualificationsValue,  // encoded course_ids here
+          other_qualifications: otherQualificationsValue,
           agree_discontinue_fee,
           profile_image
         }])
@@ -159,7 +126,6 @@ const parseCourseIds = (student) => {
     const idsStr = oq.substring(idx + COURSE_IDS_MARKER.length);
     return idsStr.split(",").map(id => id.trim()).filter(Boolean);
   }
-  // Fallback: use course_id
   if (student.course_id) {
     return [String(student.course_id)];
   }
@@ -342,6 +308,59 @@ router.put(
     }
   }
 );
+
+
+
+// =========================
+// DROPOUT / RESTORE STUDENT
+// PUT /api/students/:id/dropout
+// Body: { dropout_reason, dropout_date }
+// To restore: pass { dropout_reason: null, dropout_date: null }
+// =========================
+
+router.put("/:id/dropout", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { dropout_reason, dropout_date } = req.body;
+
+    const { data, error } = await supabase
+      .from("students")
+      .update({
+        dropout_reason: dropout_reason || null,
+        dropout_date: dropout_date || null,
+      })
+      .eq("id", id)
+      .select();
+
+    if (error) {
+      console.log(error);
+      return res.status(400).json({ message: error.message });
+    }
+
+    const isRestoring = !dropout_reason && !dropout_date;
+
+    // Add notification
+    if (data && data[0]) {
+      await supabase.from("notifications").insert([{
+        title: isRestoring ? "Student Restored" : "Student Dropout Recorded",
+        message: isRestoring
+          ? `${data[0].student_name} has been restored as an active student.`
+          : `${data[0].student_name} has dropped out. Reason: ${dropout_reason}`,
+        type: "student"
+      }]);
+    }
+
+    res.json({
+      success: true,
+      message: isRestoring ? "Student Restored Successfully" : "Dropout Recorded Successfully",
+      data,
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
 
 
 

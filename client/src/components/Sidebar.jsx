@@ -9,6 +9,7 @@ import {
   UserCircle,
   Clock3,
   UserPlus,
+  UserX,
 } from "lucide-react";
 
 import { Link, useLocation } from "react-router-dom";
@@ -34,7 +35,7 @@ function Sidebar() {
     }`;
 
   return (
-    <div className="w-[250px] h-screen bg-blue-700 text-white fixed left-0 top-0 p-5 flex flex-col">
+    <div className="w-[250px] h-screen bg-blue-700 text-white fixed left-0 top-0 p-5 flex flex-col overflow-y-auto">
 
       <h1 className="text-2xl font-bold mb-10 text-center">
         SMS Admin
@@ -76,6 +77,14 @@ function Sidebar() {
           <Link to="/students" className={linkClass("/students")}>
             <UserPlus size={18} />
             Add Student
+          </Link>
+        </li>
+
+        {/* Dropout */}
+        <li>
+          <Link to="/dropout" className={linkClass("/dropout")}>
+            <UserX size={18} />
+            Dropout
           </Link>
         </li>
 

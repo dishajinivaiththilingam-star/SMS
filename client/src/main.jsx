@@ -16,13 +16,9 @@ import Login from "./pages/Login";
 import App from "./App";
 import Courses from "./pages/Courses";
 
-// Students — two pages now:
-//   /students        → Admission Form (Add)
-//   /students/edit/:id → Admission Form (Edit)
-//   /students-list   → Table with Search
-//   /students/:id    → Student View (detail)
 import Students from "./pages/Students";
 import StudentsTable from "./pages/StudentsTable";
+import Dropout from "./pages/Dropout";
 
 import Attendance from "./pages/Attendance";
 import Fees from "./pages/Fees";
@@ -97,6 +93,16 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             element={
               <ProtectedRoute>
                 <StudentView />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* ── DROPOUT ── */}
+          <Route
+            path="/dropout"
+            element={
+              <ProtectedRoute>
+                <Dropout />
               </ProtectedRoute>
             }
           />
