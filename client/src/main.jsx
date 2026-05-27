@@ -1,312 +1,196 @@
 import React from "react";
-
 import ReactDOM from "react-dom/client";
-
-import {
-  BrowserRouter,
-  Routes,
-  Route
-} from "react-router-dom";
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
-
-
 
 // =========================
 // AUTH
 // =========================
-
-import {
-  AuthProvider
-} from "./context/AuthContext";
-
-import ProtectedRoute
-  from "./components/ProtectedRoute";
-
-
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // =========================
 // PAGES
 // =========================
+import Login from "./pages/Login";
+import App from "./App";
+import Courses from "./pages/Courses";
 
-import Login
-  from "./pages/Login";
+// Students — two pages now:
+//   /students        → Admission Form (Add)
+//   /students/edit/:id → Admission Form (Edit)
+//   /students-list   → Table with Search
+//   /students/:id    → Student View (detail)
+import Students from "./pages/Students";
+import StudentsTable from "./pages/StudentsTable";
 
-import App
-  from "./App";
-
-import Courses
-  from "./pages/Courses";
-
-import Students
-  from "./pages/Students";
-
-import Attendance
-  from "./pages/Attendance";
-
-import Fees
-  from "./pages/Fees";
-
-import AttendanceReport
-  from "./pages/AttendanceReport";
-
-import Profile
-  from "./pages/Profile";
-
-import Timetable
-  from "./pages/Timetable";
-
-import Marks
-  from "./pages/Marks";
-
-import StudentView
-  from "./pages/StudentView";
-
-import Teachers
-  from "./pages/Teachers";
-
-import TeacherProfile
-  from "./pages/TeacherProfile";
-
-import ForgotPassword
-  from "./pages/ForgotPassword";
-
-import ResetPassword
-  from "./pages/ResetPassword";
-
-
+import Attendance from "./pages/Attendance";
+import Fees from "./pages/Fees";
+import AttendanceReport from "./pages/AttendanceReport";
+import Profile from "./pages/Profile";
+import Timetable from "./pages/Timetable";
+import Marks from "./pages/Marks";
+import StudentView from "./pages/StudentView";
+import Teachers from "./pages/Teachers";
+import TeacherProfile from "./pages/TeacherProfile";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 // =========================
 // RENDER
 // =========================
 
-ReactDOM.createRoot(
-  document.getElementById("root")
-).render(
-
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-
     <AuthProvider>
-
       <BrowserRouter>
-
         <Routes>
 
-          {/* LOGIN */}
+          {/* ── PUBLIC ── */}
+          <Route path="/" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
-          <Route
-            path="/"
-            element={<Login />}
-          />
-
-          <Route
-            path="/forgot-password"
-            element={<ForgotPassword />}
-          />
-
-          <Route
-            path="/reset-password"
-            element={<ResetPassword />}
-          />
-
-
-          {/* DASHBOARD */}
-
+          {/* ── DASHBOARD ── */}
           <Route
             path="/dashboard"
             element={
-
               <ProtectedRoute>
-
                 <App />
-
               </ProtectedRoute>
-
             }
           />
 
+          {/* ── STUDENTS TABLE (list page) ── */}
+          <Route
+            path="/students-list"
+            element={
+              <ProtectedRoute>
+                <StudentsTable />
+              </ProtectedRoute>
+            }
+          />
 
-
-          {/* STUDENTS */}
-
+          {/* ── ADD STUDENT (form, no table) ── */}
           <Route
             path="/students"
             element={
-
               <ProtectedRoute>
-
                 <Students />
-
               </ProtectedRoute>
-
             }
           />
 
+          {/* ── EDIT STUDENT ── */}
+          <Route
+            path="/students/edit/:id"
+            element={
+              <ProtectedRoute>
+                <Students />
+              </ProtectedRoute>
+            }
+          />
 
-
-          {/* STUDENT VIEW */}
-
+          {/* ── STUDENT VIEW (detail) ── */}
           <Route
             path="/students/:id"
             element={
-
               <ProtectedRoute>
-
                 <StudentView />
-
               </ProtectedRoute>
-
             }
           />
 
-
-
-          {/* COURSES */}
-
+          {/* ── COURSES ── */}
           <Route
             path="/courses"
             element={
-
               <ProtectedRoute>
-
                 <Courses />
-
               </ProtectedRoute>
-
             }
           />
 
-
-
-          {/* ATTENDANCE */}
-
+          {/* ── ATTENDANCE ── */}
           <Route
             path="/attendance"
             element={
-
               <ProtectedRoute>
-
                 <Attendance />
-
               </ProtectedRoute>
-
             }
           />
 
-
-
-          {/* FEES */}
-
+          {/* ── FEES ── */}
           <Route
             path="/fees"
             element={
-
               <ProtectedRoute>
-
                 <Fees />
-
               </ProtectedRoute>
-
             }
           />
 
-
-
+          {/* ── TEACHERS ── */}
           <Route
             path="/teachers"
             element={
               <ProtectedRoute>
-
                 <Teachers />
-
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/teachers/:id"
             element={
               <ProtectedRoute>
-
                 <TeacherProfile />
-
               </ProtectedRoute>
             }
           />
 
-
-          {/* ATTENDANCE REPORT */}
-
+          {/* ── ATTENDANCE REPORT ── */}
           <Route
             path="/attendance-report"
             element={
-
               <ProtectedRoute>
-
                 <AttendanceReport />
-
               </ProtectedRoute>
-
             }
           />
 
-
-
-          {/* PROFILE */}
-
+          {/* ── PROFILE ── */}
           <Route
             path="/profile"
             element={
-
               <ProtectedRoute>
-
                 <Profile />
-
               </ProtectedRoute>
-
             }
           />
 
-
-
-          {/* TIMETABLE */}
-
+          {/* ── TIMETABLE ── */}
           <Route
             path="/timetable"
             element={
-
               <ProtectedRoute>
-
                 <Timetable />
-
               </ProtectedRoute>
-
             }
           />
 
-
-
-          {/* MARKS */}
-
+          {/* ── MARKS ── */}
           <Route
             path="/marks"
             element={
-
               <ProtectedRoute>
-
                 <Marks />
-
               </ProtectedRoute>
-
             }
           />
 
         </Routes>
-
       </BrowserRouter>
-
     </AuthProvider>
-
   </React.StrictMode>
-
 );

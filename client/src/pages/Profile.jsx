@@ -334,19 +334,7 @@ function Profile() {
 
 
 
-              {/* PASSWORD */}
-
-              <input
-                type="password"
-                placeholder="New Password"
-                className="w-full border p-3 rounded mb-5"
-                value={password}
-                onChange={(e) =>
-                  setPassword(
-                    e.target.value
-                  )
-                }
-              />
+              
 
 
 
